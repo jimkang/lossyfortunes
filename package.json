@@ -1,0 +1,30 @@
+{
+  "name": "lossyfortunes",
+  "version": "0.1.0",
+  "description": "Does some cool things.",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jimkang/lossyfortunes.git"
+  },
+  "keywords": [
+    "module",
+    "thing"
+  ],
+  "author": "Jim Kang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimkang/lossyfortunes/issues"
+  },
+  "homepage": "https://github.com/jimkang/lossyfortunes",
+  "devDependencies": {
+    "mocha": "~1.18.2"
+  },
+  "dependencies": {
+    "mstranslator": "~1.1.0",
+    "fortune-tweetable": "~0.1.1"
+  }
+}
