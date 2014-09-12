@@ -39,11 +39,32 @@ To make a re-translated and print it to the console, but not post it:
 Specification
 -------------
 
-**translatechain** takes text through a series of specified translations.
+**translateChain** takes text through a series of specified translations.
 
-**picktranslateloop** picks a loop of translations to go through based on given variability parameters.
+translateChain(translator, text, [list of valid locale codes], callback) =>
+  - `translator` is called with `intermediateText` and a locale code, for each locale code
+    - Where `intermediateText` is different each call
+  - `callback` is called like so callback(error, finalTranslation)
+    - Where:
+      - `error` is null
+      - `finalTranslation` is a string that differs from the last `intermediateText`
 
-**makelossyfortune** uses `translatechain` and `picktranslateloop` to create a lossy fortune and post it to Twitter.
+translateChain(translator, text, [list of three locale codes, the second of which is invalid], callback) =>
+  - `translator` is called with `intermediateText` and a locale code, twice
+    - Where `intermediateText` is different each call
+  - `callback` is called like so callback(error, finalTranslation)
+    - Where:
+      - `error` is a string returned by `translator`
+      - `finalTranslation` is null
+
+**pickArbitrary** deterministically picks members from an array based on a seed.
+
+pickArbitrary(seed, sizeRange, array) =>
+  - It will return an array, `selection`, containing members of `array`, where:
+    - Its size will be between `sizeRange[0]` and `sizeRange[1]`, as determined by: `sizeRange[0] + (seed % (sizeRange[1] - sizeRange[0])) + 1`
+    - Each element in `selection` will be selected as such: `array[seed % selection.length]`
+
+**makelossyfortune** uses *pickArbitrary* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
 
 Tests
 -----
