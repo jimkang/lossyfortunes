@@ -71,9 +71,11 @@ translateChain(translator, text, [list of three locale codes, the second of whic
 
 **pickTranslationLocales** gets a subset of translation locales that differ from day to day.
 
-pickTranslationLocales(day, translationLocales) =>
-  - If `day` is odd, returns the element in `translationLocales` at `(day - 1) % translationLocales.length`.
-  - If `day` is even, returns the elements at the two indexes given by `clockworkPair(translationLocales.length, day - 1)`.
+pickTranslationLocales(date, translationLocales) =>
+  - If date is in the AM, returns the element in `translationLocales` at `(day - 1) % translationLocales.length`.
+  - If date is in the PM, returns the elements at the two indexes given by `clockworkPair(translationLocales.length, day - 1)`.
+
+If there are 24 locales, this means that all the 2-locale permutations will be picked in a 24-day span, and all the permutations for all of the locales will complete in 576 days.
 
 **makeLossyRetranslation** uses *pickTranslationLocales* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
 
