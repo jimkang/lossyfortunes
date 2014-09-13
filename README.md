@@ -64,7 +64,7 @@ translateChain(translator, text, [list of three locale codes, the second of whic
   - Basically:
     clockworkPair(upperLimit, seed) =>
       - Let base = seed % upperLimit
-      - Let gap = floor(seed/upperLimit)
+      - Let gap = floor(seed/upperLimit) + 1
       - Let wraparound = fn(x, c) => x < c ? x : c - x
       - return [base, wraparound(base + gap)]
 
