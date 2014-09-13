@@ -16,7 +16,11 @@ describe('clockworkPair', function clockworkPairSuite() {
     });
 
     it('for seed 7 should return [7, 0]', function test7() {
-      assert.deepEqual(clockworkPair(8, 7), [0, 1]);
+      assert.deepEqual(clockworkPair(8, 7), [7, 0]);
+    });
+
+    it('for seed 8 should return [0, 2]', function test7() {
+      assert.deepEqual(clockworkPair(8, 8), [0, 2]);
     });
 
     it('for seed 13 should return [5, 7]', function test13() {
@@ -35,12 +39,14 @@ describe('clockworkPair', function clockworkPairSuite() {
       assert.deepEqual(clockworkPair(8, 55), [7, 6]);
     });
 
-    it('for seed 56 should return [0, 1]', function test56() {
-      assert.deepEqual(clockworkPair(8, 56), [0, 1]);
+    it('for seed 56 should return [0, 0]', function test56() {
+      assert.deepEqual(clockworkPair(8, 56), [0, 0]);
     });
 
-    it('for seed 101 should return [5, 2]', function test101() {
-      assert.deepEqual(clockworkPair(8, 101), [5, 2]);
+    it('for seed 101 should return [5, 10]', function test101() {
+      // base: 5
+      // gap: 12 + 1 => 5
+      assert.deepEqual(clockworkPair(8, 101), [5, 10]);
     });
   });
 
@@ -78,7 +84,9 @@ describe('clockworkPair', function clockworkPairSuite() {
     });
 
     it('for seed 101 should return [8, 4]', function test101() {
-      assert.deepEqual(clockworkPair(31, 101), [8, 4]);
+      // base: 8
+      // gap: 3 + 1
+      assert.deepEqual(clockworkPair(31, 101), [8, 12]);
     });
   });
 
