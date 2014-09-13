@@ -61,10 +61,16 @@ translateChain(translator, text, [list of three locale codes, the second of whic
 
 pickArbitrary(seed, sizeRange, array) =>
   - It will return an array, `selection`, containing members of `array`, where:
-    - Its size will be between `sizeRange[0]` and `sizeRange[1]`, as determined by: `sizeRange[0] + (seed % (sizeRange[1] - sizeRange[0])) + 1`
-    - Each element in `selection` will be selected as such: `array[seed % selection.length]`
+    - Its size will be between `sizeRange[0]` and `sizeRange[1]`, as determined by: `sizeRange[0] + ((sizeRange[1] - sizeRange[0]) % seed) + 1`
+    - Each element in `selection` will be selected as such: `array[selection.length % seed]`
 
-**makelossyfortune** uses *pickArbitrary* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
+**makeLossyRetranslation** uses *pickArbitrary* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
+
+makeLossyRetranslation(translateChain, pickArbitrary, text, baseLocale, locales (excluding baseLocale), callback) =>
+  - Calls pickArbitrary with a seed, sizeRange, and locales to get a set of `translationLocales`.
+  - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and callback.
+
+**makeLossyFortune(baseLocale, locales (excluding baseLocale), callback)** uses `fortune` and `makeLossyRetranslation` to get a lossy fortune to callback.
 
 Tests
 -----
