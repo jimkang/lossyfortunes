@@ -67,7 +67,7 @@ translateChain(translator, text, [list of three locale codes, the second of whic
       - Let gap = floor(seed/upperLimit) + 1
       - Let wraparound = fn(x, c) => x < c ? x : c - x
       - return [base, wraparound(base + gap)]
-
+  - If seed >= *c* * *(c - 1)*, seed will be seed % *c* * *(c - 1)*.
 
 **pickTranslationLocales** gets a subset of translation locales that differ from day to day.
 
