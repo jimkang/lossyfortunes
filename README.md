@@ -61,8 +61,8 @@ translateChain(translator, text, [list of three locale codes, the second of whic
 
 pickArbitrary(seed, sizeRange, array) =>
   - It will return an array, `selection`, containing members of `array`, where:
-    - Its size will be between `sizeRange[0]` and `sizeRange[1]`, as determined by: `sizeRange[0] + ((sizeRange[1] - sizeRange[0]) % seed) + 1`
-    - Each element in `selection` will be selected as such: `array[selection.length % seed]`
+    - Its size will be between `sizeRange[0]` and `sizeRange[1]`, as determined by: `sizeRange[0] + (seed % (sizeRange[1] - sizeRange[0]))`
+    - Each element in `selection` will be selected as such: `array[seed % selection.length]`
 
 **makeLossyRetranslation** uses *pickArbitrary* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
 
