@@ -59,13 +59,13 @@ translateChain(translator, text, [list of three locale codes, the second of whic
 
 **clockworkPair** deterministically picks a pair of numbers from a range from 0 to *c* - 1, where *c* is the upper limit, and a seed, such that:
   - The first element of a pair generated from seed *s + 1* will follow the first element of a pair generated the  seed *s*.
-    - Unless p[0] (the first element of the pair) generated from *s* is *c* - 1. In that case, p[0] for *s + 1* will be 0.
+    - Unless p\[0] (the first element of the pair) generated from *s* is *c* - 1. In that case, p[0] for *s + 1* will be 0.
   - If `pickTranslationLocales` is called for every seed from 0 to *c* * *(c - 1)*, every pair combination will be generated.
   - Basically:
     clockworkPair(upperLimit, seed) =>
       - Let base = seed % upperLimit
       - Let gap = floor(seed/upperLimit) + 1
-      - Let wraparound = fn(x, c) => x < c ? x : c - x
+      - Let wraparound = fn(x, c) => x < c ? x : x - c
       - return [base, wraparound(base + gap)]
   - If seed >= *c* * *(c - 1)*, seed will be seed % *c* * *(c - 1)*.
 
