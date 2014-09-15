@@ -72,8 +72,8 @@ translateChain(translator, text, [list of three locale codes, the second of whic
 **pickTranslationLocales** gets a subset of translation locales that differ from day to day.
 
 pickTranslationLocales(date, translationLocales) =>
-  - If date is in the AM, returns the element in `translationLocales` at `(day - 1) % translationLocales.length`.
-  - If date is in the PM, returns the elements at the two indexes given by `clockworkPair(translationLocales.length, day - 1)`.
+  - If date is in the AM, returns the element in `translationLocales` at `day % translationLocales.length`.
+  - If date is in the PM, returns the elements at the two indexes given by `clockworkPair(translationLocales.length, day)`.
 
 If there are 24 locales, this means that all the 2-locale permutations will be picked in a 24-day span, and all the permutations for all of the locales will complete in 576 days.
 

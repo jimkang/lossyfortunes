@@ -1,5 +1,6 @@
 var assert = require('assert');
 var clockworkPair = require('../clockworkPair');
+var translationLocales = require('../translationLocales');
 
 describe('clockworkPair', function clockworkPairSuite() {
   describe('upperLimit 8', function upperLimit8Suite() {
@@ -94,95 +95,71 @@ describe('clockworkPair', function clockworkPairSuite() {
 
 describe('pickTranslationLocales', function pickTranslationLocalesSuite() {
   // An array of 24 elements.
-  var locales = [
-    'ar', // Arabic
-    'zh-CHS', //Chinese Simplified
-    'nl', // Dutch
-    'fi', // Finnish
-    'fr', // French
-    'de', // German
-    'el', // Greek
-    'ht', // Haitian Creole
-    'he', // Hebrew
-    'hi', // Hindi
-    'mww', //Hmong Daw
-    'id', // Indonesian
-    'ja', // Japanese
-    'ko', // Korean
-    'ms', // Malay
-    'fa', // Persian
-    'pl', // Polish
-    'ro', // Romanian
-    'ru', // Russian
-    'es', // Spanish
-    'sv', // Swedish
-    'th', // Thai
-    'tr', // Turkish
-    'ur', // Urdu
-  ];
+  var locales = translationLocales;
+  assert.equal(locales.length, 24);
 
   describe('AM', function amSuite() {
-    it('on day 1 should return an array with locale 1', function test1() {
+    it('on day 0 should return an array with locale 0', function test1() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 1, 8, 30, 0, 0), locales),
         [locales[0]]
       );
     });
-    it('on day 2 should return an array with locale 2', function test2() {
+    it('on day 1 should return an array with locale 1', function test2() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 2, 8, 30, 0, 0), locales),
         [locales[1]]
       );
     });
-    it('on day 24 should return an array with locale 24', function test24() {
+    it('on day 24 should return an array with locale 0', function test24() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 24, 8, 30, 0, 0), locales),
-        [locales[23]]
+        [locales[0]]
       );
     });
     it('on day 25 should return an array with locale 1', function test25() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 25, 8, 30, 0, 0), locales),
-        [locales[24]]
+        [locales[1]]
       );
     });
     it('on day 26 should return an array with locale 2', function test26() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 26, 8, 30, 0, 0), locales),
-        [locales[25]]
+        [locales[2]]
       );
     });
   });
 
   describe('PM', function pmSuite() {
-    it('on day 1 should return an array with locales 1 and 2', function test1() {
+    it('on day 0 should return an array with locales 0 and 1', function test1() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 1, 22, 15, 0, 0), locales),
         [locales[0], locales[1]]
       );
     });
-    it('on day 2 should return an array with locales 2 and 3', function test2() {
+    it('on day 1 should return an array with locales 1 and 2', function test2() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 2, 22, 15, 0, 0), locales)
         [locales[1], locales[2]]
       );
     });
-    it('on day 24 should return an array with locales 24 and 1', function test24() {
+    it('on day 24 should return an array with locales 0 and 2', function test24() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 24, 22, 15, 0, 0), locales)
-        [locales[23], locales[0]]
+        [locales[0], locales[2]]
       );
     });
     it('on day 25 should return an array with locales 1 and 3', function test25() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 25, 22, 15, 0, 0), locales)
-        [locales[0], locales[2]]
+        [locales[1], locales[3]]
       );
     });
     it('on day 26 should return an array with locales 2 and 4', function test26() {
       assert.deepEqual(
         pickTranslationLocales(new Date(2014, 9, 26, 22, 15, 0, 0), locales)
-        [locales[1], locales[3]]
+        [locales[2], locales[4]]
       );
     });
   });
