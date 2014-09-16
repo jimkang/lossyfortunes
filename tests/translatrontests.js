@@ -53,7 +53,7 @@ describe('translateChain', function translateChainSuite() {
   it('should call translate once for each locale',
     function testOne(testDone) {
       var translateCount = 0;
-      function translatorStub(text, translateDone) {
+      function translatorStub(text, locale, translateDone) {
         var translation;
         if (translateCount === 0) {
           translation = '威利博士是奖金猫的朋友。';
@@ -68,20 +68,26 @@ describe('translateChain', function translateChainSuite() {
         translateCount += 1;
 
         setTimeout(function callDone() {
+          console.log('Returning translation:', translation);
           translateDone(null, translation);
         },
         0);
       }
-      translatron.translateChain({
+
+      var opts = {
         translator: translatorStub,
         text: 'Dr. Wily is a friend of Bonus Cat.',
         locales: ['zh-CHS', 'fi', 'en'],
         done: checkTranslateChainResult
-      });
+      };
+
+      var translatorSpy = sinon.spy(opts, 'translator');
+
+      translatron.translateChain(opts);
 
       function checkTranslateChainResult(error, finalTranslation) {
         assert.ok(!error, error);
-        assert.ok(translatorStub.calledThrice);
+        assert.ok(translatorSpy.calledThrice);
         assert.equal(finalTranslation, 'Dr. Wiley is a bonus feline friend.');
         testDone();
       }
@@ -91,7 +97,7 @@ describe('translateChain', function translateChainSuite() {
   it('should not return a translation if one of the locales is invalid',
     function testInvalid(testDone) {
       var translateCount = 0;
-      function translatorStub(text, translateDone) {
+      function translatorStub(text, locale, translateDone) {
         var translation;
         if (translateCount === 0) {
           translation = '威利博士是奖金猫的朋友。';
@@ -106,22 +112,32 @@ describe('translateChain', function translateChainSuite() {
         translateCount += 1;
 
         setTimeout(function callDone() {
-          translateDone(null, translation);
+          if (translation) {
+            translateDone(null, translation);
+          }
+          else {
+            translateDone('Could not translate ' + text + ' to ' + locale);
+          }
         },
         0);
       }
 
-      translatron.translateChain({
+      var opts = {
         translator: translatorStub,
         text: 'Dr. Wily is a friend of Bonus Cat.',
         locales: ['zh-CHS', 'smidgeo', 'en'],
         done: checkTranslateChainResult
-      });
+      };
+      var translatorSpy = sinon.spy(opts, 'translator');
+
+      translatron.translateChain(opts);
 
       function checkTranslateChainResult(error, finalTranslation) {
-        assert.equal(error, null, 'Error should have been null');
-        assert.ok(translatorStub.calledTwice);
-        assert.equal(finalTranslation, null);
+        assert.ok(error, 'Error should not be null');
+        console.log('translatorSpy.callCount', translatorSpy.callCount);
+        assert.ok(translatorSpy.calledTwice);
+        assert.equal(finalTranslation, '威利博士是奖金猫的朋友。', 
+          'Final translation sould be the last successful translation in the chain');
         testDone();
       }
     }
