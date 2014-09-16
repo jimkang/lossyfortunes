@@ -72,4 +72,27 @@ describe('translateChain', function translateChainSuite() {
       }
     }
   );
+
+  it('should not return a translation if one of the locales is invalid',
+    function testInvalid(testDone) {
+      var translatorStub = sinon.stub();
+      translatorStub.onCall(0).returns('威利博士是奖金猫的朋友。');
+      translatorStub.onCall(1).returns(undefined);
+      translatorStub.onCall(2).returns('Dr. Wiley is a bonus feline friend.');
+
+      translatron.translateChain({
+        translator: translatorStub,
+        text: 'Dr. Wily is a friend of Bonus Cat.',
+        locales: ['zh-CHS', 'smidgeo', 'en'],
+        done: checkTranslateChainResult
+      });
+
+      function checkTranslateChainResult(error, finalTranslation) {
+        assert.equal(error, null, 'Error should have been null');
+        assert.ok(translatorStub.calledTwice);
+        assert.equal(finalTranslation, null);
+        testDone();
+      }
+    }
+  );
 });
