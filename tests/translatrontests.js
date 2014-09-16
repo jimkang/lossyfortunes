@@ -52,11 +52,26 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
 describe('translateChain', function translateChainSuite() {
   it('should call translate once for each locale',
     function testOne(testDone) {
-      var translatorStub = sinon.stub();
-      translatorStub.onCall(0).returns('威利博士是奖金猫的朋友。');
-      translatorStub.onCall(1).returns('Tohtori Wiley on bonus kissan ystävä.');
-      translatorStub.onCall(2).returns('Dr. Wiley is a bonus feline friend.');
+      var translateCount = 0;
+      function translatorStub(text, translateDone) {
+        var translation;
+        if (translateCount === 0) {
+          translation = '威利博士是奖金猫的朋友。';
+        }
+        else if (translateCount === 1) {
+          translation = 'Tohtori Wiley on bonus kissan ystävä.';
+        }
+        else {
+          translation = 'Dr. Wiley is a bonus feline friend.';
+        }
 
+        translateCount += 1;
+
+        setTimeout(function callDone() {
+          translateDone(null, translation);
+        },
+        0);
+      }
       translatron.translateChain({
         translator: translatorStub,
         text: 'Dr. Wily is a friend of Bonus Cat.',
@@ -75,10 +90,26 @@ describe('translateChain', function translateChainSuite() {
 
   it('should not return a translation if one of the locales is invalid',
     function testInvalid(testDone) {
-      var translatorStub = sinon.stub();
-      translatorStub.onCall(0).returns('威利博士是奖金猫的朋友。');
-      translatorStub.onCall(1).returns(undefined);
-      translatorStub.onCall(2).returns('Dr. Wiley is a bonus feline friend.');
+      var translateCount = 0;
+      function translatorStub(text, translateDone) {
+        var translation;
+        if (translateCount === 0) {
+          translation = '威利博士是奖金猫的朋友。';
+        }
+        else if (translateCount === 1) {
+          translation = undefined;
+        }
+        else {
+          translation = 'Dr. Wiley is a bonus feline friend.';
+        }
+        
+        translateCount += 1;
+
+        setTimeout(function callDone() {
+          translateDone(null, translation);
+        },
+        0);
+      }
 
       translatron.translateChain({
         translator: translatorStub,
