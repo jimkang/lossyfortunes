@@ -79,7 +79,7 @@ If there are 24 locales, this means that all the 2-locale permutations will be p
 
 **makeLossyRetranslation** uses *pickTranslationLocales* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
 
-makeLossyRetranslation(translateChain, pickTranslationLocales, text, baseLocale, locales (excluding baseLocale), date, callback) =>
+makeLossyRetranslation(translateChain, pickTranslationLocales, text, translator, baseLocale, locales (excluding baseLocale), date, callback) =>
   - Calls pickTranslationLocales with a date and locales to get a set of `translationLocales`.
   - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and the callback.
 

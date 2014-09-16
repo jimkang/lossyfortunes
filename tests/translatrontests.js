@@ -11,9 +11,9 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
   pickTranslationLocalesStub.returns(day25Locales);
 
   var translatorStub = sinon.stub();
-  translatorStub.callsArgWith(3, null, 'asdf');
 
   var translateChainStub = sinon.stub();
+  translateChainStub.callsArgWith(3, null, 'Dr. Wiley is a friend bonus cat');
 
   it('should return text', function basicTest(testDone) {
     var targetText = 'Dr. Wily is a friend of Bonus Cat';
@@ -22,6 +22,7 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
     var retranslationParams = {
       translateChain: translateChainStub,
       pickTranslationLocales: pickTranslationLocalesStub,
+      translator: translatorStub,
       text: targetText,
       baseLocale: 'en',
       locales: locales,
@@ -33,13 +34,15 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
 
     function checkRetranslationResult(error, retranslation) {
       assert.ok(!error, error);
-      assert.equal(retranslation, 'asdf');
 
-      pickTranslationLocalesStub.calledWith(day25Date, locales);
+      assert.ok(pickTranslationLocalesStub.calledWith(day25Date, locales),
+        'pickTranslationLocales not called.');
 
-      translateChainStub.calledWith(translatorStub, targetText, day25Locales, 
-        checkRetranslationResult);
+      assert.ok(translateChainStub.calledWith(
+        translatorStub, targetText, day25Locales, checkRetranslationResult
+      ), 'translateChain not called');
 
+      assert.equal(retranslation, 'Dr. Wiley is a friend bonus cat');
       testDone();      
     }
   });
