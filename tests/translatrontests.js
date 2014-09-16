@@ -68,7 +68,7 @@ describe('translateChain', function translateChainSuite() {
         translateCount += 1;
 
         setTimeout(function callDone() {
-          console.log('Returning translation:', translation);
+          // console.log('Returning translation:', translation);
           translateDone(null, translation);
         },
         0);
@@ -134,7 +134,6 @@ describe('translateChain', function translateChainSuite() {
 
       function checkTranslateChainResult(error, finalTranslation) {
         assert.ok(error, 'Error should not be null');
-        console.log('translatorSpy.callCount', translatorSpy.callCount);
         assert.ok(translatorSpy.calledTwice);
         assert.equal(finalTranslation, '威利博士是奖金猫的朋友。', 
           'Final translation sould be the last successful translation in the chain');
