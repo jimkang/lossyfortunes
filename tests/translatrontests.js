@@ -48,3 +48,28 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
   });
 
 });
+
+describe('translateChain', function translateChainSuite() {
+  it('should call translate once for each locale',
+    function testOne(testDone) {
+      var translatorStub = sinon.stub();
+      translatorStub.onCall(0).returns('威利博士是奖金猫的朋友。');
+      translatorStub.onCall(1).returns('Tohtori Wiley on bonus kissan ystävä.');
+      translatorStub.onCall(2).returns('Dr. Wiley is a bonus feline friend.');
+
+      translatron.translateChain({
+        translator: translatorStub,
+        text: 'Dr. Wily is a friend of Bonus Cat.',
+        locales: ['zh-CHS', 'fi', 'en'],
+        done: checkTranslateChainResult
+      });
+
+      function checkTranslateChainResult(error, finalTranslation) {
+        assert.ok(!error, error);
+        assert.ok(translatorStub.calledThrice);
+        assert.equal(finalTranslation, 'Dr. Wiley is a bonus feline friend.');
+        testDone();
+      }
+    }
+  );
+});
