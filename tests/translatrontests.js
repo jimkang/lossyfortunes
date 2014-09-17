@@ -142,3 +142,41 @@ describe('translateChain', function translateChainSuite() {
     }
   );
 });
+
+describe('makeLossyFortune', function makeLossyFortuneSuite() {
+  it('should generate a lossy fortune',
+    function basicTest(testDone) {
+      var fortuneText = 'If it don\'t make dollars, it don\'t make sense!';
+      var lossyTranslation = 'If you do not make dollars, it does not make any sense!'
+
+      var mockFortuneMaker = {
+        fortune: function mockFortune() {
+          return fortuneText;
+        }
+      };
+
+      var fortuneSpy = sinon.spy(mockFortuneMaker, 'fortune');
+      var makeLossyRetranslationStub = sinon.stub();
+      makeLossyRetranslationStub.returns(lossyTranslation);
+
+      var opts = {
+        fortuneSource: mockFortuneMaker, 
+        lossyTranslate: makeLossyRetranslationStub,
+        done: checkLossyFortune
+      };
+
+      translatron.makeLossyFortune(opts);      
+
+      function checkLossyFortune(error, lossyFortune) {
+        assert.ok(!error, error);
+        assert.ok(fortuneSpy.calledOnce);
+        assert.ok(makeLossyRetranslationStub
+          .calledWith(fortuneText, checkLossyFortune)
+        );
+        assert.equal(lossyFortune, lossyTranslation);
+        testDone();
+      }
+    }
+  );
+});
+
