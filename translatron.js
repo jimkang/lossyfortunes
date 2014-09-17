@@ -10,6 +10,7 @@ function translateChain(opts) {
   function translateNextLocale(error, translation) {
     if (error) {
       opts.done(error, intermediateText);
+      return;
     }
     else {
       intermediateText = translation;
@@ -18,18 +19,22 @@ function translateChain(opts) {
     if (index < opts.locales.length) {
       var locale = opts.locales[index];
       index += 1;
-      debugger;
       opts.translator(intermediateText, locale, translateNextLocale);
     }
     else {
       opts.done(null, intermediateText);
     }
-  };
+  }
 
   translateNextLocale(null, opts.text);
 }
 
+function makeLossyFortune(opts) {
+
+}
+
 module.exports = {
   makeLossyRetranslation: makeLossyRetranslation,
-  translateChain: translateChain
+  translateChain: translateChain,
+  makeLossyFortune: makeLossyFortune
 };
