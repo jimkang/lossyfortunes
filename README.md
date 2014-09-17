@@ -79,7 +79,7 @@ If there are 24 locales, this means that all the 2-locale permutations will be p
 
 **makeLossyRetranslation** uses *pickTranslationLocales* to select locales to translate through and *translateChain* to create a lossy fortune from those locales. Then, it uses `twit` to post it to Twitter.
 
-makeLossyRetranslation(translateChain, pickTranslationLocales, text, translator, baseLocale, locales (excluding baseLocale), date, callback) =>
+makeLossyRetranslation(translateChain, pickTranslationLocales, translator, baseLocale, locales (excluding baseLocale), date, text, callback) =>
   - Calls pickTranslationLocales with a date and locales to get a set of `translationLocales`.
   - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and the callback.
 
@@ -95,8 +95,9 @@ makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
 
 **postLossyFortune(config, date, fortuneMaker, twit, logger)** uses config and fortuneMaker to create a lossy fortune, then uses twit to post it, while updating via logger.
 
-postLossyFortune(baseLocale, date, lossyFortuneMaker, twit, logger) =>
-  - Calls `lossyFortuneMaker` with date, baseLocale, locales to get a lossy fortune.
+postLossyFortune(baseLocale, date, makeLossyFortune, twit, logger) =>
+  - Calls `curryOpts` with makeLossyRetranslation, translateChain, pickTranslationLocales, translator, baseLocale, locales (excluding baseLocale), date to get `lossyTranslate`.
+  - Calls `lossyFortuneMaker` with a fortuneSource, `lossyTranslate`, and a callback to get a lossy fortune.
   - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with what was posted and a timestamp.
