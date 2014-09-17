@@ -83,9 +83,9 @@ makeLossyRetranslation(translateChain, pickTranslationLocales, text, translator,
   - Calls pickTranslationLocales with a date and locales to get a set of `translationLocales`.
   - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and the callback.
 
-**makeLossyFortune(fortuneSource, makeLossyRetranslation, date, baseLocale, locales (excluding baseLocale), callback)** uses `fortuneSource` and `makeLossyRetranslation` to get a lossy fortune to the callback.
+**makeLossyFortune(fortuneSource, lossyTranslate, callback)** uses `fortuneSource` and `lossyTranslate` to get a lossy fortune to the callback.
 
-makeLossyFortune(fortuneSource, lossyTranslate, date, baseLocale, locales (excluding baseLocale), callback) =>
+makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
   - Where `lossyTranslate` is a curried `makeLossyRetranslation` that already has every parameter set except for `text` and `done`.
       - `lossyTranslate`'s locales are all valid.
   - Calls `fortuneSource.fortune()` to get text.
