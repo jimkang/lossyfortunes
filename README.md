@@ -83,7 +83,23 @@ makeLossyRetranslation(translateChain, pickTranslationLocales, text, translator,
   - Calls pickTranslationLocales with a date and locales to get a set of `translationLocales`.
   - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and the callback.
 
-**makeLossyFortune(baseLocale, locales (excluding baseLocale), callback)** uses `fortune` and `makeLossyRetranslation` to get a lossy fortune to callback.
+**makeLossyFortune(fortuneSource, makeLossyRetranslation, date, baseLocale, locales (excluding baseLocale), callback)** uses `fortuneSource` and `makeLossyRetranslation` to get a lossy fortune to the callback.
+
+makeLossyFortune(fortuneSource, lossyTranslate, date, baseLocale, locales (excluding baseLocale), callback) =>
+  - Where `lossyTranslate` is a curried `makeLossyRetranslation` that already has every parameter set except for `text` and `done`.
+      - `lossyTranslate`'s locales are all valid.
+  - Calls `fortuneSource.fortune()` to get text.
+  - Calls `lossyTranslate` with that text and a callback.
+  - That callback is called with null for the error and a lossy translation of the fortune for the value.
+      - If `lossyTranslate` has an invalid locale, an error string will be returned, as per makeLossyRetranslation.
+
+**postLossyFortune(config, date, fortuneMaker, twit, logger)** uses config and fortuneMaker to create a lossy fortune, then uses twit to post it, while updating via logger.
+
+postLossyFortune(baseLocale, date, lossyFortuneMaker, twit, logger) =>
+  - Calls `lossyFortuneMaker` with date, baseLocale, locales to get a lossy fortune.
+  - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
+  - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
+  - Calls `logger.log` with what was posted and a timestamp.
 
 Tests
 -----
