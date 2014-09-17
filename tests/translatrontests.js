@@ -157,7 +157,7 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
 
       var fortuneSpy = sinon.spy(mockFortuneMaker, 'fortune');
       var makeLossyRetranslationStub = sinon.stub();
-      makeLossyRetranslationStub.returns(lossyTranslation);
+      makeLossyRetranslationStub.callsArgWith(1, null, lossyTranslation);
 
       var opts = {
         fortuneSource: mockFortuneMaker, 
@@ -170,8 +170,8 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       function checkLossyFortune(error, lossyFortune) {
         assert.ok(!error, error);
         assert.ok(fortuneSpy.calledOnce);
-        assert.ok(makeLossyRetranslationStub
-          .calledWith(fortuneText, checkLossyFortune)
+        assert.ok(
+          makeLossyRetranslationStub.calledWith(fortuneText, checkLossyFortune)
         );
         assert.equal(lossyFortune, lossyTranslation);
         testDone();

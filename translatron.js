@@ -30,7 +30,8 @@ function translateChain(opts) {
 }
 
 function makeLossyFortune(opts) {
-
+  var fortune = opts.fortuneSource.fortune();
+  opts.lossyTranslate(fortune, opts.done);
 }
 
 module.exports = {
