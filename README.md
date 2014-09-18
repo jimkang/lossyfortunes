@@ -102,6 +102,13 @@ postLossyFortune(baseLocale, date, makeLossyFortune, twit, logger) =>
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with what was posted and a timestamp.
 
+**curryOpts** is like `curry` but works on functions whose single parameter is a single `opts` dictionary. 
+
+curryOpts(fn, opts) => `curried` object
+`curried`.set(opts) => `curried` object with `opts` added to currently set opts.
+`curried`.opts => Currently loaded opts
+`curried`(opts) => `fn` is called with `opts` and all of the opts previously set.
+
 Tests
 -----
 
