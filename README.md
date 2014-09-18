@@ -96,18 +96,12 @@ makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
 **postLossyFortune(config, date, fortuneMaker, twit, logger)** uses config and fortuneMaker to create a lossy fortune, then uses twit to post it, while updating via logger.
 
 postLossyFortune(baseLocale, date, makeLossyFortune, twit, logger) =>
-  - Calls `curryOpts` with makeLossyRetranslation, translateChain, pickTranslationLocales, translator, baseLocale, locales (excluding baseLocale), date to get `lossyTranslate`.
+  - Calls [masala](https://github.com/imbcmdth/masala) with makeLossyRetranslation, translateChain, pickTranslationLocales, translator, baseLocale, locales (excluding baseLocale), date to get `lossyTranslate`.
   - Calls `lossyFortuneMaker` with a fortuneSource, `lossyTranslate`, and a callback to get a lossy fortune.
   - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with what was posted and a timestamp.
 
-**curryOpts** is like `curry` but works on functions whose single parameter is a single `opts` dictionary. 
-
-curryOpts(fn, opts) => `curried` object
-`curried`.set(opts) => `curried` object with `opts` added to currently set opts.
-`curried`.opts => Currently loaded opts
-`curried`(opts) => `fn` is called with `opts` and all of the opts previously set.
 
 Tests
 -----
