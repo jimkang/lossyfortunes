@@ -101,7 +101,7 @@ postLossyFortune(baseLocale, date, makeLossyFortune, twit, logger) =>
   - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with what was posted and a timestamp.
-
+  - Calls `done` with null and twitter post result status.
 
 Tests
 -----
