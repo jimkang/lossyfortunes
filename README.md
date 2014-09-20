@@ -93,28 +93,29 @@ makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
   - That callback is called with null for the error and a lossy translation of the fortune for the value.
       - If `lossyTranslate` has an invalid locale, an error string will be returned, as per makeLossyRetranslation.
 
-**postLossyFortune(lossyFortuneMaker, twit, logger, config, date)** uses lossyFortuneMaker and date to create a lossy fortune, then uses twit and config to post it, while updating via logger.
+**postLossyFortune(lossyFortuneMaker, twit, logger, date)** uses lossyFortuneMaker and date to create a lossy fortune, then uses twit to post it, while updating via logger.
 
-postLossyFortune(lossyFortuneMaker, twit, logger, config, date) =>
+postLossyFortune(lossyFortuneMaker, twit, logger, date) =>
   - Calls `lossyFortuneMaker` (a curried `makeLossyFortune`) with a callback to get a lossy fortune.
   - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with what was posted and a timestamp.
   - Calls `done` with null and twitter post result status.
 
-**runLossyFortune()** builds a `lossyFortuneMaker` and then calls `postLossyFortune`.
+**runLossyFortune(twit, translator, logger, locales, date)** builds a `lossyFortuneMaker` and then calls `postLossyFortune`. None of the parameters are required. Defaults are as follows:
 
-runLossyFortune(twit, logger, config, date) =>
-  - Calls [masala](https://github.com/imbcmdth/masala) with `makeLossyRetranslation` and the opts `translateChain`, `pickTranslationLocales`, `mstranslator`, `en`, locales (excluding baseLocale), date to get `lossyTranslate`.
+    {
+        twit: twit (instantiated using ./config.js),
+        translator: mstranslator,
+        logger: console,
+        locales: whatever's in ./locales.js,
+        date: new Date()
+    }
+
+runLossyFortune(twit, translator, logger, locales, date) =>
+  - Calls [masala](https://github.com/imbcmdth/masala) with `makeLossyRetranslation` and the opts `translateChain`, `pickTranslationLocales`, translator, `en`, locales (excluding baseLocale), date to get `lossyTranslate`.
   - Calls `masala` on `makeLossyFortune` with `fortune` and `lossyTranslate` to get `lossyFortuneMaker`.
-  - Calls `postLossyFortune` with `lossyFortuneMaker`, `twit`, `logger`, `config`, and the `date`.
-    -  None of the parameters are required. Defaults are as follows:
-            {
-                twit: twit,
-                logger: console,
-                config: ./config.js,
-                date: new Date()
-            }
+  - Calls `postLossyFortune` with `lossyFortuneMaker`, `twit`, `logger`, and `date`.
 
 Tests
 -----
