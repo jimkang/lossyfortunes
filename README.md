@@ -93,9 +93,9 @@ makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
   - That callback is called with null for the error and a lossy translation of the fortune for the value.
       - If `lossyTranslate` has an invalid locale, an error string will be returned, as per makeLossyRetranslation.
 
-**postLossyFortune(lossyFortuneMaker, twit, logger, date)** uses lossyFortuneMaker and date to create a lossy fortune, then uses twit to post it, while updating via logger.
+**postLossyFortune(lossyFortuneMaker, twit, logger, date, done)** uses lossyFortuneMaker and date to create a lossy fortune, then uses twit to post it, while updating via logger.
 
-postLossyFortune(lossyFortuneMaker, twit, logger, date) =>
+postLossyFortune(lossyFortuneMaker, twit, logger, date, done) =>
   - Calls `lossyFortuneMaker` (a curried `makeLossyFortune`) with a callback to get a lossy fortune.
   - Calls `logger.log` with the date, baseLocale, locales, and generated fortune.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
