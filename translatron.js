@@ -1,6 +1,16 @@
 function makeLossyRetranslation(opts) {
   var translationLocales = opts.pickTranslationLocales(opts.date, opts.locales);
-  opts.translateChain(opts.translator, opts.text, translationLocales, opts.done);
+  opts.translateChain(opts.translator, opts.text, translationLocales, 
+    checkChainResult);
+
+  function checkChainResult(error, translation) {
+    if (error) {
+      opts.done(error);
+    }
+    else {
+      opts.done(error, translation);
+    }
+  }
 }
 
 function translateChain(opts) {

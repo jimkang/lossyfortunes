@@ -43,15 +43,35 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
         'pickTranslationLocales not called.');
 
       assert.ok(translateChainStub.calledWith(
-        opts.translator, targetText, day25Locales, checkRetranslationResult
+        opts.translator, targetText, day25Locales
       ),
-      'translateChain not called');
+      'translateChain not called with correct params');
 
       assert.equal(retranslation, 'Dr. Wiley is a friend bonus cat');
       testDone();      
     }
   });
 
+  it('should not return text if there was a translateChain failure',
+    function translateChainFailureTest(testDone) {
+      var translateChainStub = sinon.stub();
+      translateChainStub.callsArgWith(3, 'There was an error in the chain', 
+        'PI PI PI');
+
+      var opts = createMakeLossyRetranslationOpts({
+        translateChain: translateChainStub,
+        done: checkRetranslationResult
+      });
+
+      translatron.makeLossyRetranslation(opts);
+
+      function checkRetranslationResult(error, retranslation) {
+        assert.ok(error, 'There should have been an error.');
+        assert.equal(retranslation, undefined);
+        testDone();
+      }
+    }
+  );
 });
 
 describe('translateChain', function translateChainSuite() {
