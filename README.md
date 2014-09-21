@@ -98,6 +98,8 @@ makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
 postLossyFortune(lossyFortuneMaker, twit, logger, date, done) =>
   - Calls `lossyFortuneMaker` (a curried `makeLossyFortune`) with a callback to get a lossy fortune.
   - Calls `logger.log` with the date and the generated fortune.
+    - Logs the error if there was an error in generating the fortune.
+    - Does not proceed if no fortune could be generated.
   - Calls `twit.post` with 'statuses/update' and the lossy fortune as the status.
   - Calls `logger.log` with a timestamp, what was posted, and the Twitter response and error.
   - Calls `done` with null and twitter post result status.
