@@ -3,48 +3,45 @@ var translationLocales = require('../translationLocales');
 var pickTranslationLocales = require('../pickTranslationLocales');
 var sinon = require('sinon');
 var postLossyFortune = require('../postLossyFortune');
+var _ = require('lodash');
 
 describe('postLossyFortune', function postLossyFortuneSuite() {
   var locales = translationLocales;
+  var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
 
-  it('should post a fortune and do all the associated things',
-    function basicTest(testDone) {
-      var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
-
-      var lossyFortuneMakerStub = sinon.stub()
-        .callsArgWith(0, null, translateChainResult);
-      // var lossyFortuneMakerSpy = sinon.spy(lossyFortuneMakerStub);
-
-      var mockLogger = {
-        log: sinon.stub()
-      };
-
-      var mockTwit = {
+  function createPostLossyFortuneOpts(overrides) {
+    return _.defaults(overrides ? overrides : {}, {
+      lossyFortuneMaker: sinon.stub().callsArgWith(0, null, translateChainResult),
+      twit: {
         post: sinon.stub().callsArgWith(2, null, 'posted!')
-      };
+      },
+      logger: {
+       log: sinon.stub()
+      },
+      date: new Date(2014, 9, 1, 22, 15, 0, 0)
+    });
+  }
 
-      var opts = {
-        lossyFortuneMaker: lossyFortuneMakerStub,
-        twit: mockTwit,
-        logger: mockLogger,
-        date: new Date(2014, 9, 1, 22, 15, 0, 0),
+  it('should create a fortune, post it, and log it',
+    function basicTest(testDone) {
+      var opts = createPostLossyFortuneOpts({
         done: checkResult
-      };
+      });
 
       postLossyFortune(opts);
 
       function checkResult(error, postResult) {
         assert.ok(!error, error);
 
-        assert.ok(mockLogger.log.calledWith(
+        assert.ok(opts.logger.log.calledWith(
           opts.date, 'Posting fortune:', translateChainResult
         ));
         assert.ok(
-          mockTwit.post.calledWith('statuses/update', {
+          opts.twit.post.calledWith('statuses/update', {
             status: translateChainResult
           })
         );
-        assert.ok(mockLogger.log.calledWith(sinon.match.date, 'Posted fortune:', 
+        assert.ok(opts.logger.log.calledWith(sinon.match.date, 'Posted fortune:', 
           translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
         );
         
