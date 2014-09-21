@@ -82,6 +82,7 @@ If there are 24 locales, this means that all the 2-locale permutations will be p
 makeLossyRetranslation(translateChain, pickTranslationLocales, translator, baseLocale, locales (excluding baseLocale), date, text, callback) =>
   - Calls pickTranslationLocales with a date and locales to get a set of `translationLocales`.
   - Calls translateChain with a translator, text, `translationLocales` + `baseLocale`, and the callback.
+      - If `translateChain` completes with an error, `makeLossyRetranslation` calls the callback with the error and no translation.
 
 **makeLossyFortune(fortuneSource, lossyTranslate, callback)** uses `fortuneSource` and `lossyTranslate` to get a lossy fortune to the callback.
 

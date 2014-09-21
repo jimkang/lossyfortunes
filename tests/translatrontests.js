@@ -2,45 +2,50 @@ var assert = require('assert');
 var translatron = require('../translatron');
 var locales = require('../translationLocales');
 var sinon = require('sinon');
+var _ = require('lodash');
 
 describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
+  var targetText = 'Dr. Wily is a friend of Bonus Cat';
   var day25Locales = [locales[0], locales[2]]
   var day25Date = new Date(2014, 9, 25, 22, 15, 0, 0);
 
-  var pickTranslationLocalesStub = sinon.stub();
-  pickTranslationLocalesStub.returns(day25Locales);
+  function createMakeLossyRetranslationOpts(overrides) {
+    var pickTranslationLocalesStub = sinon.stub();
+    pickTranslationLocalesStub.returns(day25Locales);
 
-  var translatorStub = sinon.stub();
-
-  var translateChainStub = sinon.stub();
-  translateChainStub.callsArgWith(3, null, 'Dr. Wiley is a friend bonus cat');
-
-  it('should return text', function basicTest(testDone) {
-    var targetText = 'Dr. Wily is a friend of Bonus Cat';
     var translatorStub = sinon.stub();
 
-    var retranslationParams = {
-      translateChain: translateChainStub,
+    return _.defaults(overrides ? overrides : {}, {
       pickTranslationLocales: pickTranslationLocalesStub,
       translator: translatorStub,
       text: targetText,
       baseLocale: 'en',
       locales: locales,
-      date: day25Date,
-      done: checkRetranslationResult
-    };
+      date: day25Date
+    });
+  }
 
-    translatron.makeLossyRetranslation(retranslationParams);
+  it('should return text', function basicTest(testDone) {
+    var translateChainStub = sinon.stub();
+    translateChainStub.callsArgWith(3, null, 'Dr. Wiley is a friend bonus cat');
+
+    var opts = createMakeLossyRetranslationOpts({
+      translateChain: translateChainStub,
+      done: checkRetranslationResult
+    });
+
+    translatron.makeLossyRetranslation(opts);
 
     function checkRetranslationResult(error, retranslation) {
       assert.ok(!error, error);
 
-      assert.ok(pickTranslationLocalesStub.calledWith(day25Date, locales),
+      assert.ok(opts.pickTranslationLocales.calledWith(opts.date, locales),
         'pickTranslationLocales not called.');
 
       assert.ok(translateChainStub.calledWith(
-        translatorStub, targetText, day25Locales, checkRetranslationResult
-      ), 'translateChain not called');
+        opts.translator, targetText, day25Locales, checkRetranslationResult
+      ),
+      'translateChain not called');
 
       assert.equal(retranslation, 'Dr. Wiley is a friend bonus cat');
       testDone();      
@@ -129,14 +134,13 @@ describe('translateChain', function translateChainSuite() {
         done: checkTranslateChainResult
       };
       var translatorSpy = sinon.spy(opts, 'translator');
-
       translatron.translateChain(opts);
 
       function checkTranslateChainResult(error, finalTranslation) {
         assert.ok(error, 'Error should not be null');
         assert.ok(translatorSpy.calledTwice);
         assert.equal(finalTranslation, '威利博士是奖金猫的朋友。', 
-          'Final translation sould be the last successful translation in the chain');
+          'Final translation should be the last successful translation in the chain');
         testDone();
       }
     }
