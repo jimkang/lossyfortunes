@@ -51,4 +51,38 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
     }
   );
 
+  it('should post and log a fortune even if there was an error creating it',
+    function fortuneCreatedWithErrorTest(testDone) {
+      var translateError = 'Could not translate "Dr. Wily is a friend of Bonus Cat." to locale Smidgeo';
+      var opts = createPostLossyFortuneOpts({
+        lossyFortuneMaker: sinon.stub()
+          .callsArgWith(0, translateError, translateChainResult),
+        done: checkResult
+      });
+
+      postLossyFortune(opts);
+
+      function checkResult(error, postResult) {
+        assert.ok(!error, error);
+
+        assert.ok(opts.logger.log.calledWith(
+          opts.date, 'Posting fortune:', translateChainResult, 
+          'error:', translateError
+        ));
+        assert.ok(
+          opts.twit.post.calledWith('statuses/update', {
+            status: translateChainResult
+          })
+        );
+        assert.ok(opts.logger.log.calledWith(sinon.match.date, 'Posted fortune:', 
+          translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
+        );
+
+        assert.equal(postResult, 'posted!');
+        testDone();
+      }
+    }
+  );
+
+  it('should not post if lossyFortuneMaker failed to create a fortune');
 });
