@@ -9,22 +9,19 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
 
   it('should post a fortune and do all the associated things',
     function basicTest(testDone) {
-      var fortuneText = 'Dr. Wily is a friend of Bonus Cat';
       var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
 
       var lossyFortuneMakerStub = sinon.stub()
         .callsArgWith(0, null, translateChainResult);
-      var lossyFortuneMakerSpy = sinon.spy(lossyFortuneMakerStub);
+      // var lossyFortuneMakerSpy = sinon.spy(lossyFortuneMakerStub);
 
       var mockLogger = {
         log: sinon.stub()
       };
-      var logSpy = sinon.spy(mockLogger.log);
 
       var mockTwit = {
-        post: sinon.stub().returns('OK')
+        post: sinon.stub().callsArgWith(2, null, 'posted!')
       };
-      var twitPostSpy = sinon.spy(mockTwit.post);
 
       var opts = {
         lossyFortuneMaker: lossyFortuneMakerStub,
@@ -39,16 +36,19 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
       function checkResult(error, postResult) {
         assert.ok(!error, error);
 
-        assert.ok(lossyFortuneMakerSpy.called);
+        assert.ok(mockLogger.log.calledWith(
+          opts.date, 'Posting fortune:', translateChainResult
+        ));
         assert.ok(
-          logSpy.calledWith(date, baseLocale, locales, translateChainResult)
+          mockTwit.post.calledWith('statuses/update', {
+            status: translateChainResult
+          })
         );
-        assert.ok(
-          twitPostSpy.calledWith('statuses/update', translateChainResult)
+        assert.ok(mockLogger.log.calledWith(sinon.match.date, 'Posted fortune:', 
+          translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
         );
-        assert.ok(logSpy.calledWith(translateChainResult, sinon.match.date));
         
-        assert.equal('postResult', 'OK');
+        assert.equal(postResult, 'posted!');
         testDone();
       }
     }
