@@ -54,6 +54,17 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
           value.lossyTranslate === lossyTranslateStub;
       }
 
+      function checkPostLossyFortuneOpts(value) {
+        var errorPrefix = 'postLossyFortune called with incorrect ';
+
+        assert.deepEqual(value.lossyFortuneMaker, fortuneMakerStub, 
+          errorPrefix + 'lossyFortuneMaker');
+        assert.deepEqual(value.twit, opts.twit, errorPrefix + 'twit');
+        // runLossyFortune should fill in missing `logger` with a default.        
+        assert.deepEqual(value.logger, console, errorPrefix + 'logger');
+        assert.ok(value.date instanceof Date);
+      }
+
       setTimeout(function checkSpies() {
         assert.ok(
           opts.masala.calledWith(translatron.makeLossyRetranslation, 
@@ -76,7 +87,6 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         testDone();
       },
       100);
-
     }
   );
 

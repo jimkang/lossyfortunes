@@ -4,6 +4,7 @@ var _ = require('lodash');
 var Twit = require('twit');
 var config = require('./config');
 var fortune = require('fortune-tweetable');
+var MSTranslator = require('mstranslator');
 
 function postLossyFortune(opts) {
   opts.lossyFortuneMaker(postToTwitter);
@@ -33,6 +34,42 @@ function postLossyFortune(opts) {
   }
 }
 
+function runLossyFortune(opts) {
+  var curryOpts = {
+    translateChain: translatron.translateChain,
+    pickTranslationLocales: pickTranslationLocales,
+    translator: opts.translator,
+    baseLocale: 'en',
+    locales: opts.locales,
+    date: opts.date
+  };
+
+  if (!curryOpts.translator) {
+    curryOpts.translator = new MSTranslator(config.MSTranslator, true);
+  }
+
+  var lossyTranslate = opts.masala(translatron.makeLossyRetranslation, 
+    curryOpts);
+
+  var lossyFortuneMaker = opts.masala(translatron.makeLossyFortune, {
+    fortuneSource: fortune,
+    lossyTranslate: lossyTranslate
+  });
+
+  var postFortuneOpts = _.defaults(
+    _.pick(opts, 'twit', 'logger', 'date', 'done'), 
+    {
+      lossyFortuneMaker: lossyFortuneMaker,
+      twit: new Twit(config.twitter),
+      logger: console,
+      date: new Date()
+    }
+  );
+
+  module.exports.postLossyFortune(postFortuneOpts);
+}
+
 module.exports = {
+  runLossyFortune: runLossyFortune,
   postLossyFortune: postLossyFortune
 };
