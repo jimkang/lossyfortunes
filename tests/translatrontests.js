@@ -45,9 +45,14 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
     function checkTranslateChainOpts(value) {
       var errorPrefix = 'translateChain called with incorrect ';
 
-      assert.equal(value.translator, opts.translator, errorPrefix + 'translator');
+      assert.equal(value.translator, opts.translator, 
+        errorPrefix + 'translator');
       assert.equal(value.text, targetText, errorPrefix + 'text');
-      assert.deepEqual(value.locales, day25Locales, errorPrefix + 'locales');
+
+      var localesIncludingBase = day25Locales.slice();
+      localesIncludingBase.unshift('en');
+      localesIncludingBase.push('en');
+      assert.deepEqual(value.locales, localesIncludingBase);
     }
 
     function checkRetranslationResult(error, retranslation) {

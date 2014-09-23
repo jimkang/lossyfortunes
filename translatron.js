@@ -1,5 +1,8 @@
 function makeLossyRetranslation(opts) {
-  var translationLocales = opts.pickTranslationLocales(opts.date, opts.locales);
+  var translationLocales = 
+    opts.pickTranslationLocales(opts.date, opts.locales).slice();
+  translationLocales.unshift(opts.baseLocale);
+  translationLocales.push(opts.baseLocale);
 
   opts.translateChain({
     translator: opts.translator,
