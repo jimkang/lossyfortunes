@@ -26,8 +26,14 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
   }
 
   it('should return text', function basicTest(testDone) {
-    var translateChainStub = sinon.stub();
-    translateChainStub.callsArgWith(3, null, 'Dr. Wiley is a friend bonus cat');
+    function translateChainStub(opts) {
+      checkTranslateChainOpts(opts);
+
+      setTimeout(function mockDone() {
+        opts.done(null, 'Dr. Wiley is a friend bonus cat');
+      }, 
+      0);
+    }
 
     var opts = createMakeLossyRetranslationOpts({
       translateChain: translateChainStub,
@@ -36,16 +42,19 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
 
     translatron.makeLossyRetranslation(opts);
 
+    function checkTranslateChainOpts(value) {
+      var errorPrefix = 'translateChain called with incorrect ';
+
+      assert.equal(value.translator, opts.translator, errorPrefix + 'translator');
+      assert.equal(value.text, targetText, errorPrefix + 'text');
+      assert.deepEqual(value.locales, day25Locales, errorPrefix + 'locales');
+    }
+
     function checkRetranslationResult(error, retranslation) {
       assert.ok(!error, error);
 
       assert.ok(opts.pickTranslationLocales.calledWith(opts.date, locales),
         'pickTranslationLocales not called.');
-
-      assert.ok(translateChainStub.calledWith(
-        opts.translator, targetText, day25Locales
-      ),
-      'translateChain not called with correct params');
 
       assert.equal(retranslation, 'Dr. Wiley is a friend bonus cat');
       testDone();      
@@ -54,9 +63,12 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
 
   it('should not return text if there was a translateChain failure',
     function translateChainFailureTest(testDone) {
-      var translateChainStub = sinon.stub();
-      translateChainStub.callsArgWith(3, 'There was an error in the chain', 
-        'PI PI PI');
+      function translateChainStub(opts) {
+        setTimeout(function mockDone() {
+          opts.done('There was an error in the chain', 'PI PI PI');
+        }, 
+        0);
+      }
 
       var opts = createMakeLossyRetranslationOpts({
         translateChain: translateChainStub,

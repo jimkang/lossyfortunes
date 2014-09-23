@@ -1,7 +1,12 @@
 function makeLossyRetranslation(opts) {
   var translationLocales = opts.pickTranslationLocales(opts.date, opts.locales);
-  opts.translateChain(opts.translator, opts.text, translationLocales, 
-    checkChainResult);
+  
+  opts.translateChain({
+    translator: opts.translator,
+    text: opts.text,
+    locales: translationLocales,
+    done: checkChainResult
+  });
 
   function checkChainResult(error, translation) {
     if (error) {
