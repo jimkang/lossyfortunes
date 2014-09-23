@@ -5,6 +5,7 @@ var Twit = require('twit');
 var config = require('./config');
 var fortune = require('fortune-tweetable');
 var MSTranslator = require('mstranslator');
+var masala = require('masala');
 
 function postLossyFortune(opts) {
   opts.lossyFortuneMaker(postToTwitter);
@@ -46,6 +47,10 @@ function runLossyFortune(opts) {
 
   if (!curryOpts.translator) {
     curryOpts.translator = new MSTranslator(config.MSTranslator, true);
+  }
+
+  if (!opts.masala) {
+    opts.masala = masala;
   }
 
   var lossyTranslate = opts.masala(translatron.makeLossyRetranslation, 
