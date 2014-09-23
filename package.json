@@ -26,8 +26,9 @@
     "sinon": "~1.10.3"
   },
   "dependencies": {
-    "mstranslator": "~1.1.0",
     "fortune-tweetable": "~0.1.1",
-    "masala": "~1.3.0"
+    "masala": "~1.3.0",
+    "mstranslator": "~1.1.0",
+    "twit": "^1.1.18"
   }
 }

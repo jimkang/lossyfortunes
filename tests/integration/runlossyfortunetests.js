@@ -2,10 +2,9 @@ var assert = require('assert');
 var translationLocales = require('../../translationLocales');
 var pickTranslationLocales = require('../../pickTranslationLocales');
 var sinon = require('sinon');
-var runLossyFortune = require('../../runLossyFortune');
 var translatron = require('../../translatron');
 var fortune = require('fortune-tweetable');
-var postLossyFortune = require('../../postlossyfortune');
+var lossyfortune = require('../../lossyfortune');
 
 describe('runLossyFortune', function runLossyFortuneSuite() {
 
@@ -30,7 +29,7 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
       opts.masala.onCall(0).returns(lossyTranslateStub)
       opts.masala.onCall(1).returns(fortuneMakerStub);
 
-      runLossyFortune(opts);
+      lossyfortune.runLossyFortune(opts);
 
       function checkMakeLossyRetranslationOpts(value) {
         return typeof value.translateChain === 'function' &&

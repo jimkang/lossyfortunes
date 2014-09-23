@@ -1,3 +1,10 @@
+var translatron = require('./translatron');
+var pickTranslationLocales = require('./pickTranslationLocales');
+var _ = require('lodash');
+var Twit = require('twit');
+var config = require('./config');
+var fortune = require('fortune-tweetable');
+
 function postLossyFortune(opts) {
   opts.lossyFortuneMaker(postToTwitter);
 
@@ -26,4 +33,6 @@ function postLossyFortune(opts) {
   }
 }
 
-module.exports = postLossyFortune;
+module.exports = {
+  postLossyFortune: postLossyFortune
+};

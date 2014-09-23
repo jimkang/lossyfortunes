@@ -2,7 +2,7 @@ var assert = require('assert');
 var translationLocales = require('../translationLocales');
 var pickTranslationLocales = require('../pickTranslationLocales');
 var sinon = require('sinon');
-var postLossyFortune = require('../postLossyFortune');
+var lossyfortune = require('../lossyfortune');
 var _ = require('lodash');
 
 describe('postLossyFortune', function postLossyFortuneSuite() {
@@ -28,7 +28,7 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
         done: checkResult
       });
 
-      postLossyFortune(opts);
+      lossyfortune.postLossyFortune(opts);
 
       function checkResult(error, postResult) {
         assert.ok(!error, error);
@@ -60,7 +60,7 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
         done: checkResult
       });
 
-      postLossyFortune(opts);
+      lossyfortune.postLossyFortune(opts);
 
       function checkResult(error, postResult) {
         assert.ok(!error, error);
