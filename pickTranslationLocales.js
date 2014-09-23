@@ -3,7 +3,6 @@ var clockworkPair = require('./clockworkPair');
 function pickTranslationLocales(date, translationLocales) {
   var hour = date.getHours();
   var day = date.getDate();
-  debugger;
   var locales = [];
   var seed = day - 1;
 
