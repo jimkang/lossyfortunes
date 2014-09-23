@@ -30,11 +30,11 @@ Usage
 
 To post a re-translated fortune, run the command:
 
-    node makelossyfortune.js
+    node cmd/lossyf.js
 
 To make a re-translated and print it to the console, but not post it:
 
-    node makelossyfortune.js --simulate
+    node cmd/lossyf --simulate
 
 Specification
 -------------
