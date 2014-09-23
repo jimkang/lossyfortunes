@@ -1,6 +1,6 @@
 function makeLossyRetranslation(opts) {
   var translationLocales = opts.pickTranslationLocales(opts.date, opts.locales);
-  
+
   opts.translateChain({
     translator: opts.translator,
     text: opts.text,
@@ -31,10 +31,17 @@ function translateChain(opts) {
       intermediateText = translation;
     }
 
-    if (index < opts.locales.length) {
-      var locale = opts.locales[index];
+    if (index < opts.locales.length - 1) {
+      var fromLocale = opts.locales[index];
+      var toLocale = opts.locales[index + 1];
+
       index += 1;
-      opts.translator(intermediateText, locale, translateNextLocale);
+      opts.translator({
+        text: intermediateText,
+        from: fromLocale,
+        to: toLocale
+      }, 
+      translateNextLocale);
     }
     else {
       opts.done(null, intermediateText);

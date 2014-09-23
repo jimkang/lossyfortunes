@@ -90,7 +90,11 @@ describe('translateChain', function translateChainSuite() {
   it('should call translate once for each locale',
     function testOne(testDone) {
       var translateCount = 0;
-      function translatorStub(text, locale, translateDone) {
+      function translatorStub(params, translateDone) {
+        assert.equal(typeof params.text, 'string');
+        assert.equal(typeof params.from, 'string');
+        assert.equal(typeof params.to, 'string');
+
         var translation;
         if (translateCount === 0) {
           translation = '威利博士是奖金猫的朋友。';
@@ -114,7 +118,7 @@ describe('translateChain', function translateChainSuite() {
       var opts = {
         translator: translatorStub,
         text: 'Dr. Wily is a friend of Bonus Cat.',
-        locales: ['zh-CHS', 'fi', 'en'],
+        locales: ['en', 'zh-CHS', 'fi', 'en'],
         done: checkTranslateChainResult
       };
 
@@ -134,7 +138,7 @@ describe('translateChain', function translateChainSuite() {
   it('should not return a translation if one of the locales is invalid',
     function testInvalid(testDone) {
       var translateCount = 0;
-      function translatorStub(text, locale, translateDone) {
+      function translatorStub(params, translateDone) {
         var translation;
         if (translateCount === 0) {
           translation = '威利博士是奖金猫的朋友。';
@@ -153,7 +157,8 @@ describe('translateChain', function translateChainSuite() {
             translateDone(null, translation);
           }
           else {
-            translateDone('Could not translate ' + text + ' to ' + locale);
+            translateDone('Could not translate ' + params.text + ' to ' + 
+              params.to);
           }
         },
         0);
@@ -162,7 +167,7 @@ describe('translateChain', function translateChainSuite() {
       var opts = {
         translator: translatorStub,
         text: 'Dr. Wily is a friend of Bonus Cat.',
-        locales: ['zh-CHS', 'smidgeo', 'en'],
+        locales: ['en', 'zh-CHS', 'smidgeo', 'en'],
         done: checkTranslateChainResult
       };
       var translatorSpy = sinon.spy(opts, 'translator');
