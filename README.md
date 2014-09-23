@@ -109,7 +109,7 @@ postLossyFortune(lossyFortuneMaker, twit, logger, date, done) =>
 
     {
         twit: twit (instantiated using ./config.js),
-        translator: mstranslator,
+        translator: mstranslatorInstance.translate,
         logger: console,
         locales: whatever's in ./locales.js,
         date: new Date()

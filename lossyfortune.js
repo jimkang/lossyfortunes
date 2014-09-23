@@ -46,7 +46,8 @@ function runLossyFortune(opts) {
   };
 
   if (!curryOpts.translator) {
-    curryOpts.translator = new MSTranslator(config.MSTranslator, true);
+    var translatorObject = new MSTranslator(config.MSTranslator, true);
+    curryOpts.translator = translatorObject.translate;
   }
 
   if (!opts.masala) {

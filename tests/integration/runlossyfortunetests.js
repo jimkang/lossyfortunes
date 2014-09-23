@@ -42,7 +42,7 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         // default.
         return typeof value.translateChain === 'function' &&
           typeof value.pickTranslationLocales === 'function' &&
-          value.translator instanceof MSTranslator &&
+          typeof value.translator === 'function' &&
           value.baseLocale === 'en' &&
           _.isEqual(value.locales, translationLocales) &&
           value.date === opts.date;
