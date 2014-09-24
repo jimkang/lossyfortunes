@@ -7,11 +7,19 @@ var _ = require('lodash');
 
 describe('postLossyFortune', function postLossyFortuneSuite() {
   var locales = translationLocales;
+  var translationTarget = 'Dr. Wily is a friend of Bonus Cat.';
   var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
 
   function createPostLossyFortuneOpts(overrides) {
     return _.defaults(overrides ? overrides : {}, {
-      lossyFortuneMaker: sinon.stub().callsArgWith(0, null, translateChainResult),
+      lossyFortuneMaker: function lossyFortuneMakerStub(opts) {
+        assert.equal(typeof opts.done, 'function');
+
+        setTimeout(function callDone() {
+          opts.done(null, translateChainResult);
+        },
+        0);
+      },
       twit: {
         post: sinon.stub().callsArgWith(2, null, 'posted!')
       },
@@ -25,6 +33,7 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
   it('should create a fortune, post it, and log it',
     function basicTest(testDone) {
       var opts = createPostLossyFortuneOpts({
+        text: translationTarget,
         done: checkResult
       });
 
@@ -44,7 +53,7 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
         assert.ok(opts.logger.log.calledWith(sinon.match.date, 'Posted fortune:', 
           translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
         );
-        
+
         assert.equal(postResult, 'posted!');
         testDone();
       }
@@ -55,8 +64,14 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
     function fortuneCreatedWithErrorTest(testDone) {
       var translateError = 'Could not translate "Dr. Wily is a friend of Bonus Cat." to locale Smidgeo';
       var opts = createPostLossyFortuneOpts({
-        lossyFortuneMaker: sinon.stub()
-          .callsArgWith(0, translateError, translateChainResult),
+        lossyFortuneMaker: function lossyFortuneMakerStub(opts) {
+          assert.equal(typeof opts.done, 'function');
+
+          setTimeout(function callDone() {
+            opts.done(translateError, translateChainResult);
+          },
+          0);
+        },
         done: checkResult
       });
 

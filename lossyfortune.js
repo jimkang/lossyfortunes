@@ -8,7 +8,11 @@ var MSTranslator = require('mstranslator');
 var masala = require('masala');
 
 function postLossyFortune(opts) {
-  opts.lossyFortuneMaker(postToTwitter);
+  // lossyFortuneMaker should be a curried makeLossyFortune that already has 
+  // `fortune` and `lossyTranslate` defined. 
+  opts.lossyFortuneMaker({
+    done: postToTwitter
+  });
 
   function postToTwitter(error, fortune) {
     if (typeof fortune !== 'string' || fortune.length < 1) {
@@ -47,7 +51,7 @@ function runLossyFortune(opts) {
 
   if (!curryOpts.translator) {
     var translatorObject = new MSTranslator(config.MSTranslator, true);
-    curryOpts.translator = translatorObject.translate;
+    curryOpts.translator = translatorObject.translate.bind(translatorObject);
   }
 
   if (!opts.masala) {
