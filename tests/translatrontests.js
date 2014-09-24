@@ -202,8 +202,16 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       };
 
       var fortuneSpy = sinon.spy(mockFortuneMaker, 'fortune');
-      var makeLossyRetranslationStub = sinon.stub();
-      makeLossyRetranslationStub.callsArgWith(1, null, lossyTranslation);
+
+      function makeLossyRetranslationStub(opts) {
+        assert.equal(opts.text, fortuneText);
+        assert.equal(opts.done, checkLossyFortune);
+
+        setTimeout(function callDone() {
+          opts.done(null, lossyTranslation);
+        },
+        0);
+      }
 
       var opts = {
         fortuneSource: mockFortuneMaker, 
@@ -216,9 +224,6 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       function checkLossyFortune(error, lossyFortune) {
         assert.ok(!error, error);
         assert.ok(fortuneSpy.calledOnce);
-        assert.ok(
-          makeLossyRetranslationStub.calledWith(fortuneText, checkLossyFortune)
-        );
         assert.equal(lossyFortune, lossyTranslation);
         testDone();
       }
