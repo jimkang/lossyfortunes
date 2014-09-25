@@ -49,7 +49,7 @@ Specification
 
 **translateChain** takes text through a series of specified translations.
 
-translateChain(translator, text, [list of valid locale codes], callback) =>
+translateChain(translator, text, [list of valid locale codes], logger, callback) =>
   - `translator` is called with `intermediateText` and a locale code, for each locale code
     - Where `intermediateText` is different each call
   - `callback` is called like so callback(error, finalTranslation)
@@ -57,9 +57,10 @@ translateChain(translator, text, [list of valid locale codes], callback) =>
       - `error` is null
       - `finalTranslation` is a string that differs from the last `intermediateText`
 
-translateChain(translator, text, [list of three locale codes, the second of which is invalid], callback) =>
+translateChain(translator, text, [list of three locale codes, the second of which is invalid], logger. callback) =>
   - `translator` is called with `intermediateText` and a locale code, twice
     - Where `intermediateText` is different each call
+  - Calls `logger.log` with the `intermediateText` and the `from` and `to` locales used to translate.
   - `callback` is called like so callback(error, finalTranslation)
     - Where:
       - `error` is a string returned by `translator`

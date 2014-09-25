@@ -92,40 +92,47 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
 });
 
 describe('translateChain', function translateChainSuite() {
+  var translateCount;
+
+  function translatorStub(params, translateDone) {
+    assert.equal(typeof params.text, 'string');
+    assert.equal(typeof params.from, 'string');
+    assert.equal(typeof params.to, 'string');
+
+    var translation;
+    if (translateCount === 0) {
+      translation = '威利博士是奖金猫的朋友。';
+    }
+    else if (translateCount === 1) {
+      translation = 'Tohtori Wiley on bonus kissan ystävä.';
+    }
+    else {
+      translation = 'Dr. Wiley is a bonus feline friend.';
+    }
+
+    translateCount += 1;
+
+    setTimeout(function callDone() {
+      // console.log('Returning translation:', translation);
+      translateDone(null, translation);
+    },
+    0);
+  }
+
+  function createOpts() {
+    return {
+      translator: translatorStub,
+      text: 'Dr. Wily is a friend of Bonus Cat.',
+      locales: ['en', 'zh-CHS', 'fi', 'en']
+    };
+  }
+
   it('should call translate once for each locale',
-    function testOne(testDone) {
-      var translateCount = 0;
-      function translatorStub(params, translateDone) {
-        assert.equal(typeof params.text, 'string');
-        assert.equal(typeof params.from, 'string');
-        assert.equal(typeof params.to, 'string');
+    function testTranslateCalls(testDone) {
+      translateCount = 0;      
 
-        var translation;
-        if (translateCount === 0) {
-          translation = '威利博士是奖金猫的朋友。';
-        }
-        else if (translateCount === 1) {
-          translation = 'Tohtori Wiley on bonus kissan ystävä.';
-        }
-        else {
-          translation = 'Dr. Wiley is a bonus feline friend.';
-        }
-
-        translateCount += 1;
-
-        setTimeout(function callDone() {
-          // console.log('Returning translation:', translation);
-          translateDone(null, translation);
-        },
-        0);
-      }
-
-      var opts = {
-        translator: translatorStub,
-        text: 'Dr. Wily is a friend of Bonus Cat.',
-        locales: ['en', 'zh-CHS', 'fi', 'en'],
-        done: checkTranslateChainResult
-      };
+      var opts = createOpts();
+      opts.done = checkTranslateChainResult;
 
       var translatorSpy = sinon.spy(opts, 'translator');
 
@@ -134,6 +141,39 @@ describe('translateChain', function translateChainSuite() {
       function checkTranslateChainResult(error, finalTranslation) {
         assert.ok(!error, error);
         assert.ok(translatorSpy.calledThrice);
+        assert.equal(finalTranslation, 'Dr. Wiley is a bonus feline friend.');
+        testDone();
+      }
+    }
+  );
+
+  it('should call log to report each locale it translates to',
+    function testLogs(testDone) {
+      translateCount = 0;      
+
+      var opts = createOpts();
+      opts.logger = {
+        log: sinon.stub()
+      };
+      opts.done = checkTranslateChainResult;
+
+      translatron.translateChain(opts);
+
+      function checkTranslateChainResult(error, finalTranslation) {
+        assert.ok(!error, error);
+
+        assert.ok(opts.logger.log.calledWith(
+          'From:', 'en', 'To:', 'zh-CHS', 'Translation:', '威利博士是奖金猫的朋友。'
+        ));
+        assert.ok(opts.logger.log.calledWith(
+          'From:', 'zh-CHS', 'To:', 'fi', 'Translation:', 
+          'Tohtori Wiley on bonus kissan ystävä.'
+        ));
+        assert.ok(opts.logger.log.calledWith(
+          'From:', 'fi', 'To:', 'en', 'Translation:', 
+          'Dr. Wiley is a bonus feline friend.'
+        ));
+
         assert.equal(finalTranslation, 'Dr. Wiley is a bonus feline friend.');
         testDone();
       }

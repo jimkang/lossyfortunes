@@ -24,14 +24,27 @@ function makeLossyRetranslation(opts) {
 function translateChain(opts) {
   var index = 0;
   var intermediateText;
+
+  var logger = opts.logger;
+  if (!logger) {
+    logger = console;
+  }
+
+  var previousFromLocale;
+  var previousToLocale;
   
   function translateNextLocale(error, translation) {
     if (error) {
       opts.done(error, intermediateText);
       return;
     }
-    else {
-      intermediateText = translation;
+
+    intermediateText = translation;
+
+    if (previousFromLocale && previousToLocale) {
+      logger.log('From:', previousFromLocale, 'To:', previousToLocale, 
+        'Translation:', translation
+      );
     }
 
     if (index < opts.locales.length - 1) {
@@ -39,6 +52,9 @@ function translateChain(opts) {
       var toLocale = opts.locales[index + 1];
 
       index += 1;
+      previousFromLocale = fromLocale;
+      previousToLocale = toLocale;
+
       opts.translator({
         text: intermediateText,
         from: fromLocale,
