@@ -9,8 +9,12 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
   var locales = translationLocales;
   var translationTarget = 'Dr. Wily is a friend of Bonus Cat.';
   var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
+  var mockTwitterResponse = {
+    text: 'something!'
+  };
 
   function createPostLossyFortuneOpts(overrides) {
+
     return _.defaults(overrides ? overrides : {}, {
       lossyFortuneMaker: function lossyFortuneMakerStub(opts) {
         assert.equal(typeof opts.done, 'function');
@@ -21,7 +25,7 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
         0);
       },
       twit: {
-        post: sinon.stub().callsArgWith(2, null, 'posted!')
+        post: sinon.stub().callsArgWith(2, null, mockTwitterResponse)
       },
       logger: {
        log: sinon.stub()
@@ -51,10 +55,10 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
           })
         );
         assert.ok(opts.logger.log.calledWith(sinon.match.date, 
-          'Twitter response:', 'posted!', 'error:', null)
+          'Twitter response:', mockTwitterResponse, 'error:', null)
         );
 
-        assert.equal(postResult, 'posted!');
+        assert.equal(postResult, mockTwitterResponse);
         testDone();
       }
     }
@@ -90,10 +94,10 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
           })
         );
         assert.ok(opts.logger.log.calledWith(sinon.match.date, 
-          'Twitter response:', 'posted!', 'error:', null)
+          'Twitter response:', mockTwitterResponse, 'error:', null)
         );
 
-        assert.equal(postResult, 'posted!');
+        assert.equal(postResult, mockTwitterResponse);
         testDone();
       }
     }

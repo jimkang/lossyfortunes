@@ -29,7 +29,9 @@ function postLossyFortune(opts) {
         },
         function recordTweetResult(error, reply) {
           opts.logger.log(
-            new Date(), 'Twitter response:', reply, 'error:', error
+            new Date(), 'Twitter response:', 
+            _.pick(reply, 'created_at', 'id', 'text', 'truncated'), 
+            'error:', error
           );
           opts.done(error, reply);
         }
