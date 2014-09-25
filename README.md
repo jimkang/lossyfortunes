@@ -34,7 +34,15 @@ To post a re-translated fortune, run the command:
 
 To make a re-translated and print it to the console, but not post it:
 
-    node cmd/lossyf --simulate
+    node cmd/lossyf --simulate-tweet
+
+To simulate re-translating a fortune without actually making translator API calls:
+
+    node cmd/lossyf --simulate-translate "Dr. Wiley is a bonus feline friend."
+
+To simulate both:
+
+    node cmd/lossyf --simulate-translate --simulate-tweet
 
 Specification
 -------------
