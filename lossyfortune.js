@@ -60,17 +60,19 @@ function runLossyFortune(opts) {
   var lossyTranslate = opts.masala(translatron.makeLossyRetranslation, 
     curryOpts);
 
-  var fortuneSource = {
-    fortune: function asyncFortune(done) {      
-      setTimeout(function callback() {
-        done(null, fortune.fortune());
-      },
-      0);
-    }
-  };
-
+  if (!opts.fortuneSource) {
+    opts.fortuneSource = {
+      fortune: function asyncFortune(done) {      
+        setTimeout(function callback() {
+          done(null, fortune.fortune());
+        },
+        0);
+      }
+    };
+  }
+  
   var lossyFortuneMaker = opts.masala(translatron.makeLossyFortune, {
-    fortuneSource: fortuneSource,
+    fortuneSource: opts.fortuneSource,
     lossyTranslate: lossyTranslate
   });
 

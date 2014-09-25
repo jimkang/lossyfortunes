@@ -13,7 +13,6 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
 
   it('should build a fortune maker and use it to call postLossyFortune',
     function basicTest(testDone) {
-      var fortuneText = 'Dr. Wily is a friend of Bonus Cat';
       var translateChainResult = 'Dr. Wiley is a bonus feline friend.';
 
       // Not specifying every opts so that runLossyFortune can fill in some 
@@ -84,6 +83,41 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         checkPostLossyFortuneOpts(postLossyFortuneStub.getCall(0).args[0]);
 
         postLossyFortuneStub.restore();
+        testDone();
+      },
+      100);
+    }
+  );
+
+  it('should use a fortune maker with a custom fortuneSource',
+    function fortuneSourceTest(testDone) {
+      var customSource = {
+        fortune: sinon.stub()
+      };
+
+      var opts = {
+        twit: {},
+        locales: translationLocales,
+        date: new Date(2014, 9, 1, 22, 15, 0, 0),
+        fortuneSource: customSource
+      };
+
+      opts.masala = sinon.stub();
+      opts.masala.onCall(1).returns(sinon.stub());
+
+      lossyfortune.runLossyFortune(opts);
+
+      function checkMakeLossyFortuneOpts(value) {
+        return value.fortuneSource === customSource;
+      }
+
+      setTimeout(function checkSpies() {
+        assert.ok(
+          opts.masala.calledWith(translatron.makeLossyFortune, 
+            sinon.match(checkMakeLossyFortuneOpts)),
+          'masala was not called correctly for makeLossyFortune:\n' + 
+            JSON.stringify(opts.masala.getCall(1).args)
+        );
         testDone();
       },
       100);
