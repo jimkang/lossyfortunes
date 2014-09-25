@@ -99,7 +99,7 @@ makeLossyRetranslation(translateChain, pickTranslationLocales, translator, baseL
 makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
   - Where `lossyTranslate` is a curried `makeLossyRetranslation` that already has every parameter set except for `text` and `done`.
       - `lossyTranslate`'s locales are all valid.
-  - Calls `fortuneSource.fortune()` to get text.
+  - Calls `fortuneSource.fortune(callback)` to get text.
   - Calls `lossyTranslate` with that text and a callback.
   - That callback is called with null for the error and a lossy translation of the fortune for the value.
       - If `lossyTranslate` has an invalid locale, an error string will be returned, as per makeLossyRetranslation.

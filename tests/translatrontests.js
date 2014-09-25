@@ -262,8 +262,11 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       var lossyTranslation = 'If you do not make dollars, it does not make any sense!'
 
       var mockFortuneMaker = {
-        fortune: function mockFortune() {
-          return fortuneText;
+        fortune: function mockFortune(done) {
+          setTimeout(function callDone() {
+            done(null, fortuneText);
+          },
+          0);
         }
       };
 
