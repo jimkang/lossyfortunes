@@ -16,6 +16,11 @@ function makeLossyRetranslation(opts) {
       opts.done(error);
     }
     else {
+      if (translation === opts.text) {
+        error = 'translateChain returned the original text.';
+        translation = undefined;
+      }
+
       opts.done(error, translation);
     }
   }
@@ -43,8 +48,11 @@ function translateChain(opts) {
 
     if (previousFromLocale && previousToLocale) {
       logger.log('From:', previousFromLocale, 'To:', previousToLocale, 
-        'Translation:', translation
+        'Translation:', intermediateText
       );
+    }
+    else {
+      logger.log('Initial translateChain text:', intermediateText);
     }
 
     if (index < opts.locales.length - 1) {

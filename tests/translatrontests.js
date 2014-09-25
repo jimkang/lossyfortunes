@@ -89,6 +89,32 @@ describe('makeLossyRetranslation', function makeLossyRetranslationSuite() {
       }
     }
   );
+
+  it('should not return text if translateChain returns the same text that ' +
+    'was passed in',
+    function redundantTranslationTest(testDone) {
+      function translateChainStub(opts) {
+        setTimeout(function mockDone() {
+          opts.done(null, targetText);
+        }, 
+        0);
+      }
+
+      var opts = createMakeLossyRetranslationOpts({
+        text: targetText,
+        translateChain: translateChainStub,
+        done: checkRetranslationResult
+      });
+
+      translatron.makeLossyRetranslation(opts);
+
+      function checkRetranslationResult(error, retranslation) {
+        assert.equal(error, 'translateChain returned the original text.');
+        assert.equal(retranslation, undefined);
+        testDone();
+      }
+    }
+  );  
 });
 
 describe('translateChain', function translateChainSuite() {
