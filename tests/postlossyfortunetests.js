@@ -50,8 +50,8 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
             status: translateChainResult
           })
         );
-        assert.ok(opts.logger.log.calledWith(sinon.match.date, 'Posted fortune:', 
-          translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
+        assert.ok(opts.logger.log.calledWith(sinon.match.date, 
+          'Twitter response:', 'posted!', 'error:', null)
         );
 
         assert.equal(postResult, 'posted!');
@@ -89,8 +89,8 @@ describe('postLossyFortune', function postLossyFortuneSuite() {
             status: translateChainResult
           })
         );
-        assert.ok(opts.logger.log.calledWith(sinon.match.date, 'Posted fortune:', 
-          translateChainResult, 'Twitter response:', 'posted!', 'error:', null)
+        assert.ok(opts.logger.log.calledWith(sinon.match.date, 
+          'Twitter response:', 'posted!', 'error:', null)
         );
 
         assert.equal(postResult, 'posted!');
