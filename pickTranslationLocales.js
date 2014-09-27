@@ -6,7 +6,7 @@ function pickTranslationLocales(date, translationLocales, numberOfPairsToPick) {
   var locales = [];
   var seed = day - 1;
   if (!numberOfPairsToPick) {
-    numberOfPairsToPick = 4;
+    numberOfPairsToPick = 2;
   }
 
   var indexes = [];
@@ -15,10 +15,18 @@ function pickTranslationLocales(date, translationLocales, numberOfPairsToPick) {
     indexes = indexes.concat(
       clockworkPair(translationLocales.length, seed + i * 2)
     );
+    if (i < numberOfPairsToPick - 1) {
+      // indexes.push(-1);
+    }
   }
 
   return indexes.map(function getLocaleForIndex(index) {
-    return translationLocales[index];
+    if (index === -1) {
+      return 'en';
+    }
+    else {
+      return translationLocales[index];
+    }
   });
 }
 
