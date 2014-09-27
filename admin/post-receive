@@ -1,0 +1,4 @@
+#!/bin/sh
+GIT_WORK_TREE=/var/www/lossyfortunes git checkout -f
+cd /var/www/lossyfortunes
+make build-server
