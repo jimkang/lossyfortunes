@@ -78,13 +78,13 @@ To simulate both:
 
     node cmd/lossyf --simulate-translate --simulate-tweet
 
-By default, it will use `./config.js`. However, you can set CONFIG to change that. e.g.
+By default, it will use `./config.js`. However, you can set --config to change that. e.g.
 
-    CONFIG=configs/wilyconfig.js node cmd/lossyf.js
+    node cmd/lossyf.js --config configs/wilyconfig.js
 
 For behaviors, `./behavior.js` will be the default. You can change that as well.
 
-    BEHAVIOR=behavior/wilybehavior.js node cmd/lossyf.js
+    node cmd/lossyf.js --behavior behaviors/wilybehavior.js
 
 Specification
 -------------

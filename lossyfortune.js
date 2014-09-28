@@ -41,6 +41,10 @@ function postLossyFortune(opts) {
 }
 
 function runLossyFortune(opts) {
+  if (opts.config) {
+    config = require('./' + opts.config);
+  }
+
   var curryOpts = {
     translateChain: translatron.translateChain,
     pickTranslationLocales: pickTranslationLocales,

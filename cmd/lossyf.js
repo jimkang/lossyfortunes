@@ -22,6 +22,11 @@ var cmdOpts = require('nomnom')
       flag: true,
       help: 'Simulate tweeting instead of really tweeting'
    })
+   .option('config', {
+    abbr: 'cfg',
+    full: 'config',
+    default: 'config'
+   })
    .parse();
 
 if (cmdOpts.simulateTranslate) {
@@ -43,5 +48,7 @@ if (cmdOpts.simulateTweet) {
     }
   };
 }
+
+opts.config = cmdOpts.config;
 
 lossyfortune.runLossyFortune(opts);
