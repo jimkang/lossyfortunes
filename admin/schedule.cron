@@ -1,4 +1,1 @@
-NODE_BIN = /usr/local/node
-PROJECT_DIR = /var/www/lossyfortunes
-
-0 0,2,4,6,8,10,12,14,16,18,20,22  * * 1,2,3,4,5,6,7 $(NODE_BIN) $(PROJECT_DIR)/cmd/lossyf.js
+40 0,2,4,6,8,10,12,14,16,18,20,22 * * 1,2,3,4,5,6,7 node /var/www/lossyfortunes/cmd/lossyf.js
