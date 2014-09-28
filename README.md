@@ -25,6 +25,40 @@ Then, create a `config.js` file in the project root that contains your [Twitter 
       }
     };
 
+Do the same for `behavior.js`. Example:
+
+    var bibleTries = 0;
+
+    function getFortuneFromBible(done) {
+      request('http://labs.bible.org/api/?passage=random', 
+        function sendVerse(error, response, body) {
+          bibleTries += 1;
+          var verse = body.replace(/<\/?b>/g, '');
+
+          if (error || verse.length > 140) {
+            if (bibleTries >= 5) {
+              console.log('Too many bible tries!');
+              done(error, verse);
+            }
+            else {
+              getFortuneFromBible(done);
+            }
+          }
+          else {
+            done(error, verse);
+          }
+        }
+      );
+    }
+
+    var behaviorSettings = {
+      fortuneSource: {
+        fortune: getFortuneFromBible    
+      }
+    };
+
+    module.exports = behaviorSettings;
+
 Usage
 -----
 
@@ -43,6 +77,14 @@ To simulate re-translating a fortune without actually making translator API call
 To simulate both:
 
     node cmd/lossyf --simulate-translate --simulate-tweet
+
+By default, it will use `./config.js`. However, you can set CONFIG to change that. e.g.
+
+    CONFIG=configs/wilyconfig.js node cmd/lossyf.js
+
+For behaviors, `./behavior.js` will be the default. You can change that as well.
+
+    BEHAVIOR=behavior/wilybehavior.js node cmd/lossyf.js
 
 Specification
 -------------
