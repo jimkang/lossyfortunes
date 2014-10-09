@@ -24,9 +24,9 @@ var cmdOpts = require('nomnom')
     help: 'Simulate tweeting instead of really tweeting'
   })
   .option('config', {
-  abbr: 'cfg',
-  full: 'config',
-  default: 'config'
+    abbr: 'cfg',
+    full: 'config',
+    default: 'config'
   })
   .option('forceFortune', {
     abbr: 'forcef',
