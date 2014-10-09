@@ -1,5 +1,6 @@
 var lossyfortune = require('../lossyfortune');
 var translationLocales = require('../translationLocales');
+var boss = require('../behaviors/boss');
 
 var opts = {
   locales: translationLocales,
@@ -32,6 +33,11 @@ var cmdOpts = require('nomnom')
     full: 'force-fortune',
     metavar: '<fortune>',
     help: 'Force the use of a fortune you define'
+  })
+  .option('behavior', {
+    metavar: '<behavior>',
+    help: 'Specify the behavior dependencies that you want to use',
+    default: 'lossyfortune'
   })
   .parse();
 
@@ -67,5 +73,4 @@ if (cmdOpts.forceFortune) {
 }
 
 opts.config = cmdOpts.config;
-
-lossyfortune.runLossyFortune(opts);
+boss.$[cmdOpts.behavior].runLossyFortune(opts);

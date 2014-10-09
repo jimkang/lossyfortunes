@@ -8,6 +8,7 @@ var lossyfortune = require('../../lossyfortune');
 var Twit = require('twit');
 var _ = require('lodash');
 var MSTranslator = require('mstranslator');
+var boss = require('../../behaviors/boss');
 
 describe('runLossyFortune', function runLossyFortuneSuite() {
 
@@ -34,7 +35,7 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
 
       var postLossyFortuneStub = sinon.stub(lossyfortune, 'postLossyFortune');
 
-      lossyfortune.runLossyFortune(opts);
+      boss.$.lossyfortune.runLossyFortune(opts);
 
       function checkMakeLossyRetranslationOpts(value) {
         // runLossyFortune should fill in unspecified `translator` with a 
@@ -105,7 +106,7 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
       opts.masala = sinon.stub();
       opts.masala.onCall(1).returns(sinon.stub());
 
-      lossyfortune.runLossyFortune(opts);
+      boss.$.lossyfortune.runLossyFortune(opts);
 
       function checkMakeLossyFortuneOpts(value) {
         return value.fortuneSource === customSource;

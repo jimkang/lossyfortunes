@@ -3,7 +3,6 @@ var pickTranslationLocales = require('./pickTranslationLocales');
 var _ = require('lodash');
 var Twit = require('twit');
 var config = require('./config');
-var fortune = require('fortune-tweetable');
 var MSTranslator = require('mstranslator');
 var masala = require('masala');
 
@@ -66,17 +65,6 @@ function runLossyFortune(opts) {
   var lossyTranslate = opts.masala(translatron.makeLossyRetranslation, 
     curryOpts);
 
-  if (!opts.fortuneSource) {
-    opts.fortuneSource = {
-      fortune: function asyncFortune(done) {      
-        setTimeout(function callback() {
-          done(null, fortune.fortune());
-        },
-        0);
-      }
-    };
-  }
-  
   var lossyFortuneMaker = opts.masala(translatron.makeLossyFortune, {
     fortuneSource: opts.fortuneSource,
     lossyTranslate: lossyTranslate
