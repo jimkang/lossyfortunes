@@ -1,10 +1,7 @@
 var translatron = require('./translatron');
-var pickTranslationLocales = require('./pickTranslationLocales');
 var _ = require('lodash');
 var Twit = require('twit');
 var config = require('./config');
-var MSTranslator = require('mstranslator');
-var masala = require('masala');
 
 function postLossyFortune(opts) {
   // lossyFortuneMaker should be a curried makeLossyFortune that already has 
@@ -40,34 +37,9 @@ function postLossyFortune(opts) {
 }
 
 function runLossyFortune(opts) {
-  if (opts.config) {
-    config = require('./' + opts.config);
-  }
-
-  var curryOpts = {
-    translateChain: translatron.translateChain,
-    pickTranslationLocales: pickTranslationLocales,
-    translator: opts.translator,
-    baseLocale: 'en',
-    locales: opts.locales,
-    date: opts.date
-  };
-
-  if (!curryOpts.translator) {
-    var translatorObject = new MSTranslator(config.MSTranslator, true);
-    curryOpts.translator = translatorObject.translate.bind(translatorObject);
-  }
-
-  if (!opts.masala) {
-    opts.masala = masala;
-  }
-
-  var lossyTranslate = opts.masala(translatron.makeLossyRetranslation, 
-    curryOpts);
-
   var lossyFortuneMaker = opts.masala(translatron.makeLossyFortune, {
     fortuneSource: opts.fortuneSource,
-    lossyTranslate: lossyTranslate
+    lossyTranslate: opts.lossyTranslate
   });
 
   var postFortuneOpts = _.defaults(

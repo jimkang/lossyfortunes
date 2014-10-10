@@ -3,6 +3,12 @@ var boss = wardboss.createBoss('lossyboss');
 var request = require('request');
 var lossyfortune = require('../lossyfortune');
 var fortune = require('fortune-tweetable');
+var translatron = require('../translatron');
+var pickTranslationLocales = require('../pickTranslationLocales');
+var MSTranslator = require('mstranslator');
+var masala = require('masala');
+var config = require('../config');
+
 
 boss.addConstituent('lossyfortune');
 boss.addConstituent('lossybible');
@@ -10,18 +16,19 @@ boss.addConstituent('lossybible');
 boss.addFn({
   fn: lossyfortune.runLossyFortune,
   providers: {
-    lossyfortune: provideRunLossyFortuneOptsForLossyFortune,
-    lossybible: provideRunLossyFortuneOptsForLossyBible
+    lossyfortune: provideRunLossyFortuneOpts,
+    lossybible: provideRunLossyFortuneOptsForLossyBible,    
   }
 });
 
 // Providers
 
-function provideRunLossyFortuneOptsForLossyFortune(context, providerDone) {
+function provideRunLossyFortuneOpts(context, providerDone) {
   sendNextTick({
     fortuneSource: {
       fortune: asyncFortune
     },
+    lossyTranslate: getLossyTranslate(context)
   },
   providerDone);
 }
@@ -29,10 +36,40 @@ function provideRunLossyFortuneOptsForLossyFortune(context, providerDone) {
 function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
   sendNextTick({
     fortuneSource: {
-      fortune: getFortuneFromBible
-    }
+      fortune: getFortuneFromBible,
+    },
+    lossyTranslate: getLossyTranslate(context)    
   },
   providerDone);
+}
+
+function getLossyTranslate(context) {
+  var opts = context;
+
+  if (opts.configFile) {
+    config = require('./' + opts.config);
+  }
+
+  var curryOpts = {
+    translateChain: translatron.translateChain,
+    pickTranslationLocales: pickTranslationLocales,
+    translator: opts.translator,
+    baseLocale: 'en',
+    locales: opts.locales,
+    date: opts.date
+  };
+
+  if (!curryOpts.translator) {
+    var translatorObject = new MSTranslator(config.MSTranslator, true);
+    curryOpts.translator = translatorObject.translate.bind(translatorObject);
+  }
+
+  if (!opts.masala) {
+    opts.masala = masala;
+  }
+
+  return opts.masala(translatron.makeLossyRetranslation, 
+    curryOpts);
 }
 
 // Fortune functions

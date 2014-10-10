@@ -73,4 +73,4 @@ if (cmdOpts.forceFortune) {
 }
 
 opts.config = cmdOpts.config;
-boss.$[cmdOpts.behavior].runLossyFortune(null, opts);
+boss.$[cmdOpts.behavior].runLossyFortune(opts, opts);
