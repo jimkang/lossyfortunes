@@ -27,11 +27,12 @@
   },
   "dependencies": {
     "fortune-tweetable": "^0.2.1",
+    "homophonizer": "^0.2.1",
     "masala": "~1.3.0",
     "mstranslator": "~1.1.0",
     "nomnom": "^1.8.0",
     "request": "^2.45.0",
     "twit": "^1.1.18",
-    "wardboss": "^1.1.0"
+    "wardboss": "^1.2.0"
   }
 }

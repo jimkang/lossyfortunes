@@ -17,7 +17,7 @@ boss.addFn({
 
 // Providers
 
-function provideRunLossyFortuneOptsForLossyFortune(providerDone) {
+function provideRunLossyFortuneOptsForLossyFortune(context, providerDone) {
   sendNextTick({
     fortuneSource: {
       fortune: asyncFortune
@@ -26,7 +26,7 @@ function provideRunLossyFortuneOptsForLossyFortune(providerDone) {
   providerDone);
 }
 
-function provideRunLossyFortuneOptsForLossyBible(providerDone) {
+function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
   sendNextTick({
     fortuneSource: {
       fortune: getFortuneFromBible
