@@ -35,7 +35,10 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
 
       var postLossyFortuneStub = sinon.stub(lossyfortune, 'postLossyFortune');
 
-      boss.$.lossyfortune.runLossyFortune(opts, opts);
+      boss.$.lossyfortune.runLossyFortune({
+        context: opts, 
+        params: opts
+      });
 
       function checkMakeLossyRetranslationOpts(value) {
         // runLossyFortune should fill in unspecified `translator` with a 
@@ -106,7 +109,10 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
       opts.masala = sinon.stub();
       opts.masala.onCall(1).returns(sinon.stub());
 
-      boss.$.lossyfortune.runLossyFortune(opts, opts);
+      boss.$.lossyfortune.runLossyFortune({
+        context: opts, 
+        params: opts
+      });
 
       function checkMakeLossyFortuneOpts(value) {
         return value.fortuneSource === customSource;
