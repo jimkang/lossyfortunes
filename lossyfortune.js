@@ -1,7 +1,6 @@
 var translatron = require('./translatron');
 var _ = require('lodash');
 var Twit = require('twit');
-var config = require('./config');
 
 function postLossyFortune(opts) {
   // lossyFortuneMaker should be a curried makeLossyFortune that already has 
@@ -46,7 +45,7 @@ function runLossyFortune(opts) {
     _.pick(opts, 'twit', 'logger', 'date', 'done'), 
     {
       lossyFortuneMaker: lossyFortuneMaker,
-      twit: new Twit(config.twitter),
+      twit: new Twit(opts.config.twitter),
       logger: console,
       date: new Date()
     }

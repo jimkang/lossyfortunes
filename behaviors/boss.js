@@ -7,9 +7,9 @@ var translatron = require('../translatron');
 var pickTranslationLocales = require('../pickTranslationLocales');
 var MSTranslator = require('mstranslator');
 var masala = require('masala');
-var config = require('../config');
 var homophonizer = require('homophonizer');
 var queue = require('queue-async');
+var _ = require('lodash');
 
 var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
@@ -29,42 +29,38 @@ boss.addFn({
 // Providers
 
 function provideRunLossyFortuneOpts(context, providerDone) {
-  sendNextTick({
+  sendNextTick(_.defaults(context, {
     fortuneSource: {
       fortune: asyncFortune
     },
     lossyTranslate: getLossyTranslate(context)
-  },
+  }),
   providerDone);
 }
 
 function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
-  sendNextTick({
+  sendNextTick(_.defaults(context, {
     fortuneSource: {
       fortune: getFortuneFromBible,
     },
-    lossyTranslate: getLossyTranslate(context)    
-  },
+    lossyTranslate: getLossyTranslate(context)
+  }),
   providerDone);
 }
 
 function provideRunOptsWithPhonemeHomophones(context, providerDone) {
-  sendNextTick({
+  sendNextTick(_.defaults(context, {
     fortuneSource: {
       fortune: asyncFortune,
     },
     lossyTranslate: homophonizeTextWithPhonemes,
     masala: masala
-  },
+  }),
   providerDone);
 }
 
 function getLossyTranslate(context) {
   var opts = context;
-
-  if (opts.configFile) {
-    config = require('./' + opts.config);
-  }
 
   var curryOpts = {
     translateChain: translatron.translateChain,
@@ -76,7 +72,7 @@ function getLossyTranslate(context) {
   };
 
   if (!curryOpts.translator) {
-    var translatorObject = new MSTranslator(config.MSTranslator, true);
+    var translatorObject = new MSTranslator(opts.config.MSTranslator, true);
     curryOpts.translator = translatorObject.translate.bind(translatorObject);
   }
 

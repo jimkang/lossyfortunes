@@ -23,7 +23,8 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         // translator: sinon.stub(),
         // logger: {},
         locales: translationLocales,
-        date: new Date(2014, 9, 1, 22, 15, 0, 0)
+        date: new Date(2014, 9, 1, 22, 15, 0, 0),
+        config: require('../../configs/config')
       };
 
       var lossyTranslateStub = sinon.stub();
@@ -36,7 +37,7 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
       var postLossyFortuneStub = sinon.stub(lossyfortune, 'postLossyFortune');
 
       boss.$.lossyfortune.runLossyFortune({
-        context: opts, 
+        context: opts,
         params: opts
       });
 
@@ -103,7 +104,8 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         twit: {},
         locales: translationLocales,
         date: new Date(2014, 9, 1, 22, 15, 0, 0),
-        fortuneSource: customSource
+        fortuneSource: customSource,
+        config: require('../../configs/config')
       };
 
       opts.masala = sinon.stub();

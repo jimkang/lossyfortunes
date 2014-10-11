@@ -72,7 +72,8 @@ if (cmdOpts.forceFortune) {
   };
 }
 
-opts.config = cmdOpts.config;
+opts.config = require('../configs/' + cmdOpts.config);
+
 boss.$[cmdOpts.behavior].runLossyFortune({
   context: opts,
   params: opts
