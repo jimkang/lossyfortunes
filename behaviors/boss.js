@@ -8,16 +8,21 @@ var pickTranslationLocales = require('../pickTranslationLocales');
 var MSTranslator = require('mstranslator');
 var masala = require('masala');
 var config = require('../config');
+var homophonizer = require('homophonizer');
+var queue = require('queue-async');
 
+var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
 boss.addConstituent('lossyfortune');
 boss.addConstituent('lossybible');
+boss.addConstituent('phonemeHomophoneFortune');
 
 boss.addFn({
   fn: lossyfortune.runLossyFortune,
   providers: {
     lossyfortune: provideRunLossyFortuneOpts,
-    lossybible: provideRunLossyFortuneOptsForLossyBible,    
+    lossybible: provideRunLossyFortuneOptsForLossyBible,
+    phonemeHomophoneFortune: provideRunOptsWithPhonemeHomophones
   }
 });
 
@@ -39,6 +44,17 @@ function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
       fortune: getFortuneFromBible,
     },
     lossyTranslate: getLossyTranslate(context)    
+  },
+  providerDone);
+}
+
+function provideRunOptsWithPhonemeHomophones(context, providerDone) {
+  sendNextTick({
+    fortuneSource: {
+      fortune: asyncFortune,
+    },
+    lossyTranslate: homophonizeTextWithPhonemes,
+    masala: masala
   },
   providerDone);
 }
@@ -68,9 +84,33 @@ function getLossyTranslate(context) {
     opts.masala = masala;
   }
 
-  return opts.masala(translatron.makeLossyRetranslation, 
-    curryOpts);
+  return opts.masala(
+    translatron.makeLossyRetranslation, curryOpts
+  );
 }
+
+function homophonizeTextWithPhonemes(opts) {
+  var q = queue();
+  var words = opts.text.split(' ');
+  words.forEach(function queueTranslation(word) {
+    var word = word.replace(/[\.\-\,\?]/g, '');
+    console.log('queuing word:', word);
+    q.defer(phonemeHomophonizer.getHomophones, word);
+  });
+
+  q.awaitAll(function done(error, translatedWords) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      translatedWords = translatedWords.map(function getLast(words) {
+        return words[words.length - 1]; 
+      });
+
+      opts.done(error, translatedWords.join(' '));
+    }
+  });
+};
 
 // Fortune functions
 
