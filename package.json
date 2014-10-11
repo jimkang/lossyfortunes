@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "fortune-tweetable": "^0.2.1",
-    "homophonizer": "^0.2.2",
+    "homophonizer": "^0.2.3",
     "masala": "~1.3.0",
     "mstranslator": "~1.1.0",
     "nomnom": "^1.8.0",
