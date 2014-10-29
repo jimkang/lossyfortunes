@@ -33,4 +33,11 @@ describe('verseparser', function bibleParseSuite() {
       assert.equal(parsed.text, pair.parsing.text);
     });
   });
+
+  it('should return undefined for something it can\'t parse', 
+    function testBadVerse() {
+      var parsed = verseparser.parse('Do unto others because you\'re cool!');
+      assert.equal(parsed, undefined);
+    }
+  );
 });
