@@ -30,7 +30,7 @@ Do the same for `behavior.js`. Example:
     var bibleTries = 0;
 
     function getFortuneFromBible(done) {
-      request('http://labs.bible.org/api/?passage=random', 
+      request('http://labs.bible.org/api/?passage=random',
         function sendVerse(error, response, body) {
           bibleTries += 1;
           var verse = body.replace(/<\/?b>/g, '');
@@ -53,7 +53,7 @@ Do the same for `behavior.js`. Example:
 
     var behaviorSettings = {
       fortuneSource: {
-        fortune: getFortuneFromBible    
+        fortune: getFortuneFromBible
       }
     };
 
@@ -136,6 +136,10 @@ makeLossyRetranslation(translateChain, pickTranslationLocales, translator, baseL
       - If the final translation is the same as the initial text, `makeLossyRetranslation` calls the callback with the error and no translation.
 
 **makeLossyFortune(fortuneSource, lossyTranslate, callback)** uses `fortuneSource` and `lossyTranslate` to get a lossy fortune to the callback.
+- `fortuneSource` is a function that returns an array of objects, each of which have the following properties:
+  - text
+  - shouldTranslate
+- Each text that should be translated is passed to `lossyTranslate`. All of the texts, translated or not, are then strung together and passed to the callback.
 
 makeLossyFortune(fortuneSource, lossyTranslate, callback) =>
   - Where `lossyTranslate` is a curried `makeLossyRetranslation` that already has every parameter set except for `text` and `done`.
