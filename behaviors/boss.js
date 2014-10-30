@@ -10,6 +10,7 @@ var masala = require('masala');
 var homophonizer = require('homophonizer');
 var queue = require('queue-async');
 var _ = require('lodash');
+var verseparser = require('../domains/bible/verseparser');
 
 var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
@@ -111,7 +112,14 @@ function homophonizeTextWithPhonemes(opts) {
 // Fortune functions
 
 function asyncFortune(done) {
-  sendNextTick(fortune.fortune(), done);
+  sendNextTick([
+      {
+        text: fortune.fortune(),
+        shouldTranslate: true
+      }
+    ],
+    done
+  );
 }
 
 var bibleTries = 0;
@@ -120,19 +128,30 @@ function getFortuneFromBible(done) {
   request('http://labs.bible.org/api/?passage=random', 
     function sendVerse(error, response, body) {
       bibleTries += 1;
-      var verse = body.replace(/<\/?b>/g, '');
 
-      if (error || verse.length > 140) {
+      // var verse = body.replace(/<\/?b>/g, '');
+      var parsed = verseparser.parse(body);
+
+      if (error || (parsed.citation.length + 1 + parsed.text.length > 140)) {
         if (bibleTries >= 5) {
           console.log('Too many bible tries!');
-          done(error, verse);
+          done(error);
         }
         else {
           getFortuneFromBible(done);
         }
       }
       else {
-        done(error, verse);
+        done(error, [
+            {
+              text: parsed.citation + ' ',
+              shouldTranslate: false
+            },
+            {
+              text: parsed.text,
+              shouldTranslate: true
+            }
+          ]);
       }
     }
   );
