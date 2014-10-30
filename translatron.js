@@ -1,3 +1,5 @@
+var queue = require('queue-async');
+
 function makeLossyRetranslation(opts) {
   var translationLocales = 
     opts.pickTranslationLocales(opts.date, opts.locales).slice();
@@ -79,19 +81,43 @@ function translateChain(opts) {
 }
 
 function makeLossyFortune(opts) {
-  var fortune = opts.fortuneSource.fortune(translateFortune);
-
-  function translateFortune(error, fortune) {
+  opts.fortuneSource.fortune(function checkThenTranslate(error, segments) {
     if (error) {
       opts.done(error);
     }
     else {
-      opts.lossyTranslate({
-        text: fortune, 
-        done: opts.done
-      });
+      translateSegments(opts.lossyTranslate, segments, opts.done);
     }
+  });
+}
+
+function translateSegments(lossyTranslate, segments, done) {
+  var q = queue();
+
+  segments.forEach(function queueTranslate(segment) {
+    var translate = segment.shouldTranslate ? translateWrapper : identity;
+    q.defer(translate, segment.text);
+  });
+
+  q.awaitAll(translateFortune);
+
+  function translateWrapper(text, done) {
+    lossyTranslate({
+      text: text,
+      done: done
+    });
   }
+
+  function translateFortune(error, translatedSegments) {
+    console.log('translatedSegments:', translatedSegments);
+    done(error, translatedSegments.join(''));
+  }
+}
+
+function identity(text, done) {
+  setTimeout(function callDone() {
+    done(null, text);
+  }, 0);
 }
 
 module.exports = {

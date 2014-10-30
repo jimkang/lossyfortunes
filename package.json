@@ -1,6 +1,6 @@
 {
   "name": "lossyfortunes",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Does some cool things.",
   "main": "index.js",
   "scripts": {

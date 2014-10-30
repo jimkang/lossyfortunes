@@ -264,7 +264,12 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       var mockFortuneMaker = {
         fortune: function mockFortune(done) {
           setTimeout(function callDone() {
-            done(null, fortuneText);
+            done(null, [
+              {
+                text: fortuneText,
+                shouldTranslate: true
+              }
+            ]);
           },
           0);
         }
@@ -274,7 +279,6 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
 
       function makeLossyRetranslationStub(opts) {
         assert.equal(opts.text, fortuneText);
-        assert.equal(opts.done, checkLossyFortune);
 
         setTimeout(function callDone() {
           opts.done(null, lossyTranslation);
@@ -298,5 +302,65 @@ describe('makeLossyFortune', function makeLossyFortuneSuite() {
       }
     }
   );
+
+  it('should make a fortune using a source that returns some segments that should not be translated',
+    function nonTranslatedPartsTest(testDone) {
+      var title = 'Rule of thumb\n';
+      var fortuneText = 'If it don\'t make dollars, it don\'t make sense!';
+      var attribution = '\n--Matty Lasko';
+
+      var lossyTextTranslation = 'If you do not make dollars, it does not make any sense!'
+      var expectedTranslation = 'Rule of thumb\nIf you do not make dollars, it does not make any sense!\n--Matty Lasko'
+
+      var mockFortuneMaker = {
+        fortune: function mockFortune(done) {
+          setTimeout(function callDone() {
+            done(null, [
+              {
+                text: title,
+                shouldTranslate: false
+              },
+              {
+                text: fortuneText,
+                shouldTranslate: true
+              },
+              {
+                text: attribution,
+                shouldTranslate: false
+              }
+            ]);
+          },
+          0);
+        }
+      };
+
+      var fortuneSpy = sinon.spy(mockFortuneMaker, 'fortune');
+
+      function makeLossyRetranslationStub(opts) {
+        assert.equal(opts.text, fortuneText);
+
+        setTimeout(function callDone() {
+          opts.done(null, lossyTextTranslation);
+        },
+        0);
+      }
+
+      var opts = {
+        fortuneSource: mockFortuneMaker, 
+        lossyTranslate: makeLossyRetranslationStub,
+        done: checkLossyFortune
+      };
+
+      translatron.makeLossyFortune(opts);      
+
+      function checkLossyFortune(error, lossyFortune) {
+        assert.ok(!error, error);
+        assert.ok(fortuneSpy.calledOnce);
+        assert.equal(lossyFortune, expectedTranslation);
+        testDone();
+      }
+    }
+  );
+
 });
 
