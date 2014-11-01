@@ -64,8 +64,9 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
         assert.deepEqual(value.lossyFortuneMaker, fortuneMakerStub, 
           errorPrefix + 'lossyFortuneMaker');
         assert.deepEqual(value.twit, opts.twit, errorPrefix + 'twit');
-        // runLossyFortune should fill in missing `logger` with a default.        
-        assert.deepEqual(value.logger, console, errorPrefix + 'logger');
+        assert.deepEqual(typeof value.logger, 'object', errorPrefix + 'logger');
+        assert.deepEqual(typeof value.logger.log, 'function', errorPrefix + 
+          'logger');
         assert.ok(value.date instanceof Date);
       }
 
