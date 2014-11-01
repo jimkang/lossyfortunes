@@ -11,6 +11,7 @@ var homophonizer = require('homophonizer');
 var queue = require('queue-async');
 var _ = require('lodash');
 var verseparser = require('../domains/bible/verseparser');
+var translationLoggerModule = require('../loggers/translationlogger');
 
 var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
@@ -34,7 +35,7 @@ function provideRunLossyFortuneOpts(context, providerDone) {
     fortuneSource: {
       fortune: asyncFortune
     },
-    lossyTranslate: getLossyTranslate(context)
+    lossyTranslate: getLossyTranslate(context),
   }),
   providerDone);
 }
@@ -69,7 +70,8 @@ function getLossyTranslate(context) {
     translator: opts.translator,
     baseLocale: 'en',
     locales: opts.locales,
-    date: opts.date
+    date: opts.date,
+    logger: translationLoggerModule.createTranslationLogger()
   };
 
   if (!curryOpts.translator) {
@@ -163,7 +165,7 @@ function sendNextTick(params, done) {
   process.nextTick(function callDone() {
     done(null, params);
   },
-  0);  
+  0);
 }
 
 module.exports = boss;

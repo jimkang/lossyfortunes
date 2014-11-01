@@ -10,7 +10,8 @@ function makeLossyRetranslation(opts) {
     translator: opts.translator,
     text: opts.text,
     locales: translationLocales,
-    done: checkChainResult
+    done: checkChainResult,
+    logger: opts.logger
   });
 
   function checkChainResult(error, translation) {
@@ -49,12 +50,20 @@ function translateChain(opts) {
     intermediateText = translation;
 
     if (previousFromLocale && previousToLocale) {
-      logger.log('From:', previousFromLocale, 'To:', previousToLocale, 
-        'Translation:', intermediateText
-      );
+      logger.log({
+        translationStep: {
+          from: previousFromLocale,
+          to: previousToLocale,
+          translation: intermediateText
+        }
+      });
     }
     else {
-      logger.log('Initial translateChain text:', intermediateText);
+      logger.log({
+        translationStep: {
+          initialText: intermediateText
+        }
+      });
     }
 
     if (index < opts.locales.length - 1) {
@@ -73,6 +82,12 @@ function translateChain(opts) {
       translateNextLocale);
     }
     else {
+      logger.log({
+        translationStep: {
+          translationEnded: true
+        }
+      });
+
       opts.done(null, intermediateText);
     }
   }
