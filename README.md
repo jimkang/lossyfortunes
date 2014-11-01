@@ -160,14 +160,15 @@ postLossyFortune(lossyFortuneMaker, twit, logger, date, done) =>
   - Calls `logger.log` with a timestamp, what was posted, and the Twitter response and error.
   - Calls `done` with null and twitter post result status.
 
-**runLossyFortune(twit, translator, logger, locales, date)** builds a `lossyFortuneMaker` and then calls `postLossyFortune`. None of the parameters are required. Defaults are as follows:
+**runLossyFortune(twit, translator, logger, locales, date, done)** builds a `lossyFortuneMaker` and then calls `postLossyFortune`. None of the parameters are required. Defaults are as follows:
 
     {
         twit: twit (instantiated using ./config.js),
         translator: mstranslatorInstance.translate,
         logger: console,
         locales: whatever's in ./locales.js,
-        date: new Date()
+        date: new Date(),
+        done: <no op>
     }
 
 runLossyFortune(twit, translator, logger, locales, date) =>

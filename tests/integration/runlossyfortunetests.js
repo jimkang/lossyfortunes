@@ -94,6 +94,42 @@ describe('runLossyFortune', function runLossyFortuneSuite() {
     }
   );
 
+  it('should call done',
+    function doneTest(testDone) {
+      var opts = {
+        twit: {
+          post: function postStub(path, opts, twitDone) {
+            setTimeout(function callTwitDone() {
+              twitDone(null, 'Mock post done.');
+            });
+          }
+        },
+        locales: translationLocales,
+        date: new Date(2014, 9, 1, 22, 15, 0, 0),
+        config: require('../../configs/config'),
+        done: runLossyFortuneDone
+      };
+
+      opts.masala = sinon.stub();
+      opts.masala.onCall(1).returns(function mockLossyFortuneMaker(opts) {
+        setTimeout(function callDone() {
+          opts.done(null, 'Your test will pass.');
+        },
+        0);
+      });
+
+      boss.$.lossyfortune.runLossyFortune({
+        context: opts,
+        params: opts
+      });
+
+      function runLossyFortuneDone(error) {
+        assert.ok(!error, 'done should not have been called with an error.');
+        testDone();
+      }
+    }
+  );
+
   it('should use a fortune maker with a custom fortuneSource',
     function fortuneSourceTest(testDone) {
       var customSource = {

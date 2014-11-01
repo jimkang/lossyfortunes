@@ -47,7 +47,8 @@ function runLossyFortune(opts) {
       lossyFortuneMaker: lossyFortuneMaker,
       twit: new Twit(opts.config.twitter),
       logger: console,
-      date: new Date()
+      date: new Date(),
+      done: function noOp() {}
     }
   );
 
