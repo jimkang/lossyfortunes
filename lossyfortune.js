@@ -19,18 +19,29 @@ function postLossyFortune(opts) {
     else {
       opts.logger.log(opts.date, 'Posting fortune:', fortune, 'error:', error);
 
-      opts.twit.post('statuses/update', {
-          status: fortune
-        },
-        function recordTweetResult(error, reply) {
-          opts.logger.log(
-            new Date(), 'Twitter response:', 
-            _.pick(reply, 'created_at', 'id', 'text', 'truncated'), 
-            'error:', error
-          );
-          opts.done(error, reply);
-        }
-      );
+      function runTwit() {
+        opts.twit.post('statuses/update', {
+            status: fortune
+          },
+          function recordTweetResult(error, reply) {
+            opts.logger.log(
+              new Date(), 'Twitter response:', 
+              _.pick(reply, 'created_at', 'id', 'text', 'truncated'), 
+              'error:', error
+            );
+            opts.done(error, reply);
+          }
+        );     
+      }
+
+      var delay = 0;
+      if (opts.config && opts.config.twitter && 
+        opts.config.twitter.twitterDelay) {
+        
+        delay = opts.config.twitter.twitterDelay;
+      }
+
+      setTimeout(runTwit, delay);
     }
   }
 }
@@ -42,7 +53,7 @@ function runLossyFortune(opts) {
   });
 
   var postFortuneOpts = _.defaults(
-    _.pick(opts, 'twit', 'logger', 'date', 'done'), 
+    _.pick(opts, 'twit', 'logger', 'date', 'done', 'config'), 
     {
       lossyFortuneMaker: lossyFortuneMaker,
       twit: new Twit(opts.config.twitter),
