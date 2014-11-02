@@ -23,7 +23,7 @@ describe('pickTranslationLocales', function pickTranslationLocalesSuite() {
     debugger;
     assert.deepEqual(
       pickTranslationLocales(new Date(2014, 9, 24, 8, 15, 0, 0), locales, 1),
-      [locales[23], locales[2]]
+      [locales[23], locales[0]]
     );
   });
   it('on day 25 should return an array with locales 0 and 2', function test25() {
