@@ -125,7 +125,12 @@ function translateSegments(lossyTranslate, segments, done) {
 
   function translateFortune(error, translatedSegments) {
     console.log('translatedSegments:', translatedSegments);
-    done(error, translatedSegments.join(''));
+    if (error) {
+      done(error);
+    }
+    else {
+      done(error, translatedSegments.join(''));
+    }
   }
 }
 

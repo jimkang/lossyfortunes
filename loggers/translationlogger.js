@@ -1,4 +1,4 @@
-function createTranslationLogger() {
+function createTranslationLogger(translationDoneCallback) {
   var entries = [];
 
   var translationLogger = {
@@ -6,6 +6,10 @@ function createTranslationLogger() {
       if (typeof entry.translationStep === 'object') {
         entries.push(entry.translationStep);
         console.log(entry);
+        
+        if (translationDoneCallback && entry.translationStep.translationEnded) {
+          translationDoneCallback(entries);
+        }
       }
       else {
         console.log.apply(console.log, arguments);
@@ -13,7 +17,7 @@ function createTranslationLogger() {
     },
     getEntries: function getEntries() {
       return entries;
-    }
+    }    
   };
 
   return translationLogger;

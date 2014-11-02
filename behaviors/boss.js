@@ -12,8 +12,11 @@ var queue = require('queue-async');
 var _ = require('lodash');
 var verseparser = require('../domains/bible/verseparser');
 var translationLoggerModule = require('../loggers/translationlogger');
+var tumblrLogPosterLib = require('../loggers/tumblrlogposter');
 
 var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
+
+var tumblrLogPoster;
 
 boss.addConstituent('lossyfortune');
 boss.addConstituent('lossybible');
@@ -64,6 +67,21 @@ function provideRunOptsWithPhonemeHomophones(context, providerDone) {
 function getLossyTranslate(context) {
   var opts = context;
 
+  function postLogsToTumblr(logs) {
+    if (typeof opts.config.tumblr === 'object' && tumblrLogPoster) {      
+      tumblrLogPoster.postEntries({
+        logs: logs,
+        config: opts.config.tumblr,
+        done: function tumblrReportDone(error) {
+          if (error) {
+            console.log(error);
+          }
+          console.log('Report to Tumblr complete.');
+        }
+      });
+    }
+  }
+
   var curryOpts = {
     translateChain: translatron.translateChain,
     pickTranslationLocales: pickTranslationLocales,
@@ -71,7 +89,7 @@ function getLossyTranslate(context) {
     baseLocale: 'en',
     locales: opts.locales,
     date: opts.date,
-    logger: translationLoggerModule.createTranslationLogger()
+    logger: translationLoggerModule.createTranslationLogger(postLogsToTumblr)
   };
 
   if (!curryOpts.translator) {
@@ -131,7 +149,6 @@ function getFortuneFromBible(done) {
     function sendVerse(error, response, body) {
       bibleTries += 1;
 
-      // var verse = body.replace(/<\/?b>/g, '');
       var parsed = verseparser.parse(body);
 
       if (error || (parsed.citation.length + 1 + parsed.text.length > 140)) {
@@ -144,6 +161,9 @@ function getFortuneFromBible(done) {
         }
       }
       else {
+        tumblrLogPoster = tumblrLogPosterLib.createLogPoster();
+        tumblrLogPoster.setPostTitle(parsed.citation);
+
         done(error, [
             {
               text: parsed.citation + ' ',
