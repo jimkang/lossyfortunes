@@ -1,37 +1,26 @@
 module.exports = [
-  'el', // Greek
-  'he', // Hebrew
-
-  'th', // Thai
   'mww', //Hmong Daw
-
-  'ar', // Arabic
-  'fa', // Persian
-
-  'ru', // Russian
-  'fi', // Finnish
-
-  'ur', // Urdu
   'hi', // Hindi
-
-  'sv', // Swedish
   'nl', // Dutch
-
-  'de', // German
+  'el', // Greek
+  'fr', // French
+  'he', // Hebrew
+  'ko', // Korean
+  'fa', // Persian
+  'ms', // Malay
+  'pl', // Polish
   'es', // Spanish
-
+  'ru', // Russian
+  'ro', // Romanian
+  'sv', // Swedish
+  'th', // Thai
   'tr', // Turkish
   'id', // Indonesian
-
-  'ms', // Malay
+  'ur', // Urdu
   'zh-CHS', //Chinese Simplified
-
-  'fr', // French
-  'ht', // Haitian Creole
-
-  'ko', // Korean
+  'fi', // Finnish
+  'ar', // Arabic  
+  'de', // German
   'ja', // Japanese
-
-  'ro', // Romanian
-  'pl', // Polish
+  'ht', // Haitian Creole  
 ];
