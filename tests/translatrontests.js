@@ -188,17 +188,28 @@ describe('translateChain', function translateChainSuite() {
       function checkTranslateChainResult(error, finalTranslation) {
         assert.ok(!error, error);
 
-        assert.ok(opts.logger.log.calledWith(
-          'From:', 'en', 'To:', 'zh-CHS', 'Translation:', '威利博士是奖金猫的朋友。'
-        ));
-        assert.ok(opts.logger.log.calledWith(
-          'From:', 'zh-CHS', 'To:', 'fi', 'Translation:', 
-          'Tohtori Wiley on bonus kissan ystävä.'
-        ));
-        assert.ok(opts.logger.log.calledWith(
-          'From:', 'fi', 'To:', 'en', 'Translation:', 
-          'Dr. Wiley is a bonus feline friend.'
-        ));
+        assert.ok(opts.logger.log.calledWith({
+          translationStep: {
+            from: 'en',
+            to: 'zh-CHS', 
+            translation: '威利博士是奖金猫的朋友。'
+          }
+        }));
+        assert.ok(opts.logger.log.calledWith({
+          translationStep: {
+            from: 'zh-CHS',
+            to: 'fi', 
+            translation: 'Tohtori Wiley on bonus kissan ystävä.'
+          }
+        }));
+
+        assert.ok(opts.logger.log.calledWith({
+          translationStep: {
+            from: 'fi',
+            to: 'en', 
+            translation: 'Dr. Wiley is a bonus feline friend.'
+          }
+        }));
 
         assert.equal(finalTranslation, 'Dr. Wiley is a bonus feline friend.');
         testDone();
