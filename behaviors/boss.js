@@ -7,14 +7,14 @@ var translatron = require('../translatron');
 var pickTranslationLocales = require('../pickTranslationLocales');
 var MSTranslator = require('mstranslator');
 var masala = require('masala');
-var homophonizer = require('homophonizer');
+// var homophonizer = require('homophonizer');
 var queue = require('queue-async');
 var _ = require('lodash');
 var verseparser = require('../domains/bible/verseparser');
 var translationLoggerModule = require('../loggers/translationlogger');
 var tumblrLogPosterLib = require('../loggers/tumblrlogposter');
 
-var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
+// var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
 var tumblrLogPoster;
 
@@ -27,7 +27,7 @@ boss.addFn({
   providers: {
     lossyfortune: provideRunLossyFortuneOpts,
     lossybible: provideRunLossyFortuneOptsForLossyBible,
-    phonemeHomophoneFortune: provideRunOptsWithPhonemeHomophones
+    // phonemeHomophoneFortune: provideRunOptsWithPhonemeHomophones
   }
 });
 
@@ -53,16 +53,16 @@ function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
   providerDone);
 }
 
-function provideRunOptsWithPhonemeHomophones(context, providerDone) {
-  sendNextTick(_.defaults(context, {
-    fortuneSource: {
-      fortune: asyncFortune,
-    },
-    lossyTranslate: homophonizeTextWithPhonemes,
-    masala: masala
-  }),
-  providerDone);
-}
+// function provideRunOptsWithPhonemeHomophones(context, providerDone) {
+//   sendNextTick(_.defaults(context, {
+//     fortuneSource: {
+//       fortune: asyncFortune,
+//     },
+//     lossyTranslate: homophonizeTextWithPhonemes,
+//     masala: masala
+//   }),
+//   providerDone);
+// }
 
 function getLossyTranslate(context) {
   var opts = context;
@@ -106,28 +106,28 @@ function getLossyTranslate(context) {
   );
 }
 
-function homophonizeTextWithPhonemes(opts) {
-  var q = queue();
-  var words = opts.text.split(' ');
-  words.forEach(function queueTranslation(word) {
-    var word = word.replace(/[\.\-\,\?]/g, '');
-    console.log('queuing word:', word);
-    q.defer(phonemeHomophonizer.getHomophones, word);
-  });
+// function homophonizeTextWithPhonemes(opts) {
+//   var q = queue();
+//   var words = opts.text.split(' ');
+//   words.forEach(function queueTranslation(word) {
+//     var word = word.replace(/[\.\-\,\?]/g, '');
+//     console.log('queuing word:', word);
+//     q.defer(phonemeHomophonizer.getHomophones, word);
+//   });
 
-  q.awaitAll(function done(error, translatedWords) {
-    if (error) {
-      console.log(error);
-    }
-    else {
-      translatedWords = translatedWords.map(function getLast(words) {
-        return words[words.length - 1]; 
-      });
+//   q.awaitAll(function done(error, translatedWords) {
+//     if (error) {
+//       console.log(error);
+//     }
+//     else {
+//       translatedWords = translatedWords.map(function getLast(words) {
+//         return words[words.length - 1]; 
+//       });
 
-      opts.done(error, translatedWords.join(' '));
-    }
-  });
-};
+//       opts.done(error, translatedWords.join(' '));
+//     }
+//   });
+// };
 
 // Fortune functions
 
