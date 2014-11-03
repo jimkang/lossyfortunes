@@ -11,6 +11,8 @@ function parse(verse) {
       citation: captured[0],
       text: captured[1]
     };
+
+    parsed.text = parsed.text.replace(/&#8211;/g, '\u2013');
   }
 
   return parsed;

@@ -21,6 +21,11 @@ var parsingsForVerses = [
     parsing: {
       citation: 'Esther 1:16',
       text: 'Memucan then replied to the king and the officials, “The wrong of Queen Vashti is not against the king alone, but against all the officials and all the people who are throughout all the provinces of King Ahasuerus.'
+    },
+    verse: '<b>Job 22:15</b> Will you keep to the old path that evil men have walked&#8211;',
+    parsing: {
+      citation: 'Job 22:15',
+      text: 'Will you keep to the old path that evil men have walked\u2013'
     }
   }
 ];
