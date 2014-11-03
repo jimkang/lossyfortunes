@@ -2,7 +2,7 @@ var queue = require('queue-async');
 
 function makeLossyRetranslation(opts) {
   var translationLocales = 
-    opts.pickTranslationLocales(opts.date, opts.locales).slice();
+    opts.pickTranslationLocales(opts.date, opts.locales, 10).slice();
   translationLocales.unshift(opts.baseLocale);
   translationLocales.push(opts.baseLocale);
 
