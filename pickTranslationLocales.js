@@ -8,7 +8,7 @@ function pickTranslationLocales(date, translationLocales, numberOfPairsToPick) {
   var locales = [];
   var seed = day - 1;
   if (!numberOfPairsToPick) {
-    numberOfPairsToPick = 2;
+    numberOfPairsToPick = 3;
   }
 
   var indexes = [];
