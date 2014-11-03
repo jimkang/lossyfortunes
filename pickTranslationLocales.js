@@ -1,4 +1,6 @@
 var clockworkPair = require('./clockworkPair');
+var assert = require('assert');
+var _ = require('lodash');
 
 function pickTranslationLocales(date, translationLocales, numberOfPairsToPick) {
   var hour = date.getHours();
@@ -17,9 +19,11 @@ function pickTranslationLocales(date, translationLocales, numberOfPairsToPick) {
     );
   }
 
-  return indexes.map(function getLocaleForIndex(index) {
+  // TODO: _.uniq is a stopgap fix here. Should figure out why duplicates are 
+  // returned by clockworkPair.
+  return _.uniq(indexes.map(function getLocaleForIndex(index) {
     return translationLocales[index];
-  });
+  }));
 }
 
 module.exports = pickTranslationLocales;
