@@ -4,7 +4,7 @@ var probable = require('probable');
 function makeLossyRetranslation(opts) {
   var translationLocales = 
     opts.pickTranslationLocales(opts.date, opts.locales, 
-      probable.roll(8) + 1).slice();
+      probable.roll(5) + 1).slice();
   translationLocales.unshift(opts.baseLocale);
   translationLocales.push(opts.baseLocale);
 
