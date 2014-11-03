@@ -1,8 +1,10 @@
 var queue = require('queue-async');
+var probable = require('probable');
 
 function makeLossyRetranslation(opts) {
   var translationLocales = 
-    opts.pickTranslationLocales(opts.date, opts.locales, 10).slice();
+    opts.pickTranslationLocales(opts.date, opts.locales, 
+      probable.roll(8) + 1).slice();
   translationLocales.unshift(opts.baseLocale);
   translationLocales.push(opts.baseLocale);
 
