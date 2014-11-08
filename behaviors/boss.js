@@ -27,6 +27,7 @@ boss.addFn({
   providers: {
     lossyfortune: provideRunLossyFortuneOpts,
     lossybible: provideRunLossyFortuneOptsForLossyBible,
+    lossyaeneid: provideRunLossyFortuneOptsForLossyAeneid
     // phonemeHomophoneFortune: provideRunOptsWithPhonemeHomophones
   }
 });
@@ -47,6 +48,16 @@ function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
   sendNextTick(_.defaults(context, {
     fortuneSource: {
       fortune: getFortuneFromBible,
+    },
+    lossyTranslate: getLossyTranslate(context)
+  }),
+  providerDone);
+}
+
+function provideRunLossyFortuneOptsForLossyAeneid(context, providerDone) {
+  sendNextTick(_.defaults(context, {
+    fortuneSource: {
+      fortune: getFortuneFromAeneid,
     },
     lossyTranslate: getLossyTranslate(context)
   }),
@@ -174,6 +185,40 @@ function getFortuneFromBible(done) {
               shouldTranslate: true
             }
           ]);
+      }
+    }
+  );
+}
+
+var emdash = '\u2014';
+
+function getFortuneFromAeneid(done) {
+  request('http://api.aeneid.eu/sortes',
+    function sendVerse(error, response, body) {
+      var parsed = JSON.parse(body);
+
+      if (error) {
+        console.log('Error from the Aeneid API:', error);
+        done(error);
+      }
+      else {
+        var attribution = emdash + 'Aeneid ' + parsed.book + '.' +
+          parsed.start_line;
+
+        if (parsed.number_of_lines > 1) {
+          attribution += ('-' + parsed.start_line + parsed.number_of_lines);
+        }
+
+        done(error, [
+          {
+            text: parsed.text.join(' '),
+            shouldTranslate: true
+          },
+          {
+            text: attribution,
+            shouldTranslate: false
+          }
+        ]);
       }
     }
   );
