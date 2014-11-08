@@ -202,7 +202,7 @@ function getFortuneFromAeneid(done) {
         done(error);
       }
       else {
-        var attribution = emdash + 'Aeneid ' + parsed.book + '.' +
+        var attribution = '\n' + emdash + 'Aeneid ' + parsed.book + '.' +
           parsed.start_line;
 
         if (parsed.number_of_lines > 1) {
