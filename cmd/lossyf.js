@@ -65,7 +65,14 @@ if (cmdOpts.forceFortune) {
   opts.fortuneSource = {  
     fortune: function get(done) {
       setTimeout(function () {
-        done(null, cmdOpts.forceFortune);
+        done(null, 
+          [
+            {
+              text: cmdOpts.forceFortune,
+              shouldTranslate: true
+            }
+          ]
+        );
       },
       0);
     }
