@@ -59,7 +59,7 @@ function provideRunLossyFortuneOptsForLossyAeneid(context, providerDone) {
     fortuneSource: {
       fortune: getFortuneFromAeneid,
     },
-    lossyTranslate: getLossyTranslate(context, getLossyTranslateCurryOpts),
+    lossyTranslate: getLossyTranslate(context, getAeneidLossyTranslateCurryOpts),
 
   }),
   providerDone);
@@ -122,6 +122,23 @@ function getLossyTranslateCurryOpts(context) {
     curryOpts.translator = translatorObject.translate.bind(translatorObject);
   }
 
+  return curryOpts;
+}
+
+function getAeneidLossyTranslateCurryOpts(context) {
+  var curryOpts = getLossyTranslateCurryOpts(context);
+  curryOpts.pickTranslationLocales = function getJan2At5PMChain() {
+    return [
+      'hi',
+      'nl',
+      'el',
+      'fr',
+      'he',
+      'ko',
+      'fa',
+      'ms'
+    ];
+  };
   return curryOpts;
 }
 
