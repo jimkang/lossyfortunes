@@ -39,7 +39,7 @@ function provideRunLossyFortuneOpts(context, providerDone) {
     fortuneSource: {
       fortune: asyncFortune
     },
-    lossyTranslate: getLossyTranslate(context),
+    lossyTranslate: getLossyTranslate(context, getLossyTranslateCurryOpts),
   }),
   providerDone);
 }
@@ -49,7 +49,7 @@ function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
     fortuneSource: {
       fortune: getFortuneFromBible,
     },
-    lossyTranslate: getLossyTranslate(context)
+    lossyTranslate: getLossyTranslate(context, getLossyTranslateCurryOpts)
   }),
   providerDone);
 }
@@ -59,7 +59,8 @@ function provideRunLossyFortuneOptsForLossyAeneid(context, providerDone) {
     fortuneSource: {
       fortune: getFortuneFromAeneid,
     },
-    lossyTranslate: getLossyTranslate(context)
+    lossyTranslate: getLossyTranslate(context, getLossyTranslateCurryOpts),
+
   }),
   providerDone);
 }
@@ -75,7 +76,20 @@ function provideRunLossyFortuneOptsForLossyAeneid(context, providerDone) {
 //   providerDone);
 // }
 
-function getLossyTranslate(context) {
+function getLossyTranslate(context, getCurryOpts) {
+  var opts = context;
+  var curryOpts = getCurryOpts(context);
+
+  if (!opts.masala) {
+    opts.masala = masala;
+  }
+
+  return opts.masala(
+    translatron.makeLossyRetranslation, curryOpts
+  );
+}
+
+function getLossyTranslateCurryOpts(context) {
   var opts = context;
 
   function postLogsToTumblr(logs) {
@@ -108,13 +122,7 @@ function getLossyTranslate(context) {
     curryOpts.translator = translatorObject.translate.bind(translatorObject);
   }
 
-  if (!opts.masala) {
-    opts.masala = masala;
-  }
-
-  return opts.masala(
-    translatron.makeLossyRetranslation, curryOpts
-  );
+  return curryOpts;
 }
 
 // function homophonizeTextWithPhonemes(opts) {
