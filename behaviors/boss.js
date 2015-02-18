@@ -13,6 +13,7 @@ var _ = require('lodash');
 var verseparser = require('../domains/bible/verseparser');
 var translationLoggerModule = require('../loggers/translationlogger');
 var tumblrLogPosterLib = require('../loggers/tumblrlogposter');
+var probable = require('probable');
 
 // var phonemeHomophonizer = homophonizer.phoneme.createHomophonizer();
 
@@ -45,11 +46,20 @@ function provideRunLossyFortuneOpts(context, providerDone) {
 }
 
 function provideRunLossyFortuneOptsForLossyBible(context, providerDone) {
+  var lossyTranslate;
+
+  if (probable.roll(3) === 0) {
+    lossyTranslate = getLossyTranslate(context, getLossyTranslateCurryOpts)
+  }
+  else {
+    lossyTranslate = getLossyTranslate(context, getBibleLossyTranslateCurryOpts);
+  }
+
   sendNextTick(_.defaults(context, {
     fortuneSource: {
       fortune: getFortuneFromBible,
     },
-    lossyTranslate: getLossyTranslate(context, getLossyTranslateCurryOpts)
+    lossyTranslate: lossyTranslate
   }),
   providerDone);
 }
@@ -142,6 +152,22 @@ function getAeneidLossyTranslateCurryOpts(context) {
   return curryOpts;
 }
 
+function getBibleLossyTranslateCurryOpts(context) {
+  var curryOpts = getLossyTranslateCurryOpts(context);
+  curryOpts.pickTranslationLocales = function getFeb18At11PMChain() {
+    return [
+      'ur',
+      'zh-CHS',
+      'fi',
+      'ar',
+      'de',
+      'ja',
+      'ht',
+      'mww'
+    ];
+  };
+  return curryOpts;
+}
 // function homophonizeTextWithPhonemes(opts) {
 //   var q = queue();
 //   var words = opts.text.split(' ');
